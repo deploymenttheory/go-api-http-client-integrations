@@ -1,5 +1,5 @@
 // jamfpro_api_request.go
-package jamfpro
+package jamfprointegration
 
 import (
 	"bytes"

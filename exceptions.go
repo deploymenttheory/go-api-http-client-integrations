@@ -1,4 +1,4 @@
-package jamfpro
+package jamfprointegration
 
 import (
 	_ "embed"

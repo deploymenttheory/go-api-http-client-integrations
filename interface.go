@@ -1,6 +1,6 @@
 // jamfpro_api_handler.go
 
-package jamfpro
+package jamfprointegration
 
 import (
 	"net/http"

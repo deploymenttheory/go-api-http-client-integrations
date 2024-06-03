@@ -1,5 +1,5 @@
 // jamfpro_api_url.go
-package jamfpro
+package jamfprointegration
 
 import (
 	"fmt"

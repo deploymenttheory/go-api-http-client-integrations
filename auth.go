@@ -1,1 +1,1 @@
-package jamfpro
+package jamfprointegration

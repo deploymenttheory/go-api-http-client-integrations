@@ -1,5 +1,5 @@
 // jamfpro_api_headers.go
-package jamfpro
+package jamfprointegration
 
 import (
 	"strings"

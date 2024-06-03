@@ -1,4 +1,4 @@
-package jamfpro
+package jamfprointegration
 
 // Endpoint constants represent the URL suffixes used for Jamf API token interactions.
 const (
