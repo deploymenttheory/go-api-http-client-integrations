@@ -11,9 +11,9 @@ import (
 
 // JamfAPIHandler implements the APIHandler interface for the Jamf Pro API.
 type Integration struct {
-	BaseDomain           string        // OverrideBaseDomain is used to override the base domain for URL construction.
-	InstanceName         string        // InstanceName is the name of the Jamf instance.
-	Logger               logger.Logger // Logger is the structured logger used for logging.
+	BaseDomain           string // OverrideBaseDomain is used to override the base domain for URL construction.
+	InstanceName         string // InstanceName is the name of the Jamf instance.
+	Logger               logger.Logger
 	AuthMethod           string
 	ClientId             string
 	ClientSecret         string
@@ -40,11 +40,11 @@ func (j *Integration) SetRequestHeaders(method string, req http.Request) http.Re
 }
 
 func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
-	return j.marshalRequest(body, method, endpoint, j.Logger)
+	return j.marshalRequest(body, method, endpoint)
 }
 
 func (j *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
-	return j.marshalMultipartRequest(fields, files, j.Logger)
+	return j.marshalMultipartRequest(fields, files)
 }
 
 func (j *Integration) GetContentTypeHeader(method string) string {

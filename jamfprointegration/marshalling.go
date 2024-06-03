@@ -11,12 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
 	"go.uber.org/zap"
 )
 
 // MarshalRequest encodes the request body according to the endpoint for the API.
-func (j *Integration) marshalRequest(body interface{}, method string, endpoint string, log logger.Logger) ([]byte, error) {
+func (j *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
 		err  error
@@ -62,7 +61,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 }
 
 // MarshalMultipartRequest handles multipart form data encoding with secure file handling and returns the encoded body and content type.
-func (j *Integration) marshalMultipartRequest(fields map[string]string, files map[string]string, log logger.Logger) ([]byte, string, error) {
+func (j *Integration) marshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -77,7 +76,7 @@ func (j *Integration) marshalMultipartRequest(fields map[string]string, files ma
 	for formField, filePath := range files {
 		file, err := SafeOpenFile(filePath)
 		if err != nil {
-			log.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
+			j.Logger.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
 			return nil, "", err
 		}
 		defer file.Close()
