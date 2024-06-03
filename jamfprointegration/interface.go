@@ -35,10 +35,6 @@ func (j *JamfAPIHandler) Domain() string {
 	return ""
 }
 
-func (j *JamfAPIHandler) AutheMethodDescriptor() string {
-	return j.AuthMethodDescriptor
-}
-
 func (j *JamfAPIHandler) SetRequestHeaders(method string, req http.Request) http.Request {
 	return req
 }
@@ -49,4 +45,12 @@ func (j *JamfAPIHandler) MarshalRequest(body interface{}, method string, endpoin
 
 func (j *JamfAPIHandler) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return j.marshalMultipartRequest(fields, files, j.Logger)
+}
+
+func (j *JamfAPIHandler) GetContentTypeHeader(method string) string {
+	return ""
+}
+
+func (j *JamfAPIHandler) GetAuthMethodDescriptor() string {
+	return j.AuthMethodDescriptor
 }
