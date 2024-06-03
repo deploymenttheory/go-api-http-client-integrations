@@ -10,7 +10,7 @@ import (
 )
 
 // JamfAPIHandler implements the APIHandler interface for the Jamf Pro API.
-type JamfAPIHandler struct {
+type Integration struct {
 	BaseDomain           string        // OverrideBaseDomain is used to override the base domain for URL construction.
 	InstanceName         string        // InstanceName is the name of the Jamf instance.
 	Logger               logger.Logger // Logger is the structured logger used for logging.
@@ -27,30 +27,30 @@ type TokenResponse struct {
 	Expires time.Time `json:"expires"`
 }
 
-func (j *JamfAPIHandler) Token() string {
+func (j *Integration) Token() string {
 	return ""
 }
 
-func (j *JamfAPIHandler) Domain() string {
+func (j *Integration) Domain() string {
 	return ""
 }
 
-func (j *JamfAPIHandler) SetRequestHeaders(method string, req http.Request) http.Request {
+func (j *Integration) SetRequestHeaders(method string, req http.Request) http.Request {
 	return req
 }
 
-func (j *JamfAPIHandler) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
 	return j.marshalRequest(body, method, endpoint, j.Logger)
 }
 
-func (j *JamfAPIHandler) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
+func (j *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return j.marshalMultipartRequest(fields, files, j.Logger)
 }
 
-func (j *JamfAPIHandler) GetContentTypeHeader(method string) string {
+func (j *Integration) GetContentTypeHeader(method string) string {
 	return ""
 }
 
-func (j *JamfAPIHandler) GetAuthMethodDescriptor() string {
+func (j *Integration) GetAuthMethodDescriptor() string {
 	return j.AuthMethodDescriptor
 }

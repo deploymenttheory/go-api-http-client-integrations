@@ -15,7 +15,7 @@ import (
 // - For url endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
-func (j *JamfAPIHandler) getContentTypeHeader(endpoint string) string {
+func (j *Integration) getContentTypeHeader(endpoint string) string {
 	// Dynamic lookup from configuration should be the first priority
 	for key, config := range configMap {
 		if strings.HasPrefix(endpoint, key) {
@@ -50,7 +50,7 @@ func (j *JamfAPIHandler) getContentTypeHeader(endpoint string) string {
 // the server is informed of the client's versatile content handling capabilities while
 // indicating a preference for XML. The specified MIME types cover common content formats like
 // images, JSON, XML, HTML, plain text, and certificates, with a fallback option for all other types.
-func (j *JamfAPIHandler) GetAcceptHeader() string {
+func (j *Integration) GetAcceptHeader() string {
 	weightedAcceptHeader := "application/x-x509-ca-cert;q=0.95," +
 		"application/pkix-cert;q=0.94," +
 		"application/pem-certificate-chain;q=0.93," +
@@ -70,7 +70,7 @@ func (j *JamfAPIHandler) GetAcceptHeader() string {
 }
 
 // GetAPIRequestHeaders returns a map of standard headers required for making API requests.
-func (j *JamfAPIHandler) GetAPIRequestHeaders(endpoint string) map[string]string {
+func (j *Integration) GetAPIRequestHeaders(endpoint string) map[string]string {
 	headers := map[string]string{
 		"Accept":        j.GetAcceptHeader(),                  // Dynamically set based on API requirements.
 		"Content-Type":  j.getContentTypeHeader(endpoint),     // Dynamically set based on the endpoint.
