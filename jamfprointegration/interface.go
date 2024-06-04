@@ -31,12 +31,11 @@ func (j *Integration) Token() string {
 	return ""
 }
 
-func (j *Integration) Domain() string {
+func (j Integration) Domain() string {
 	return ""
 }
 
-func (j *Integration) SetRequestHeaders(method string, req http.Request) http.Request {
-	return req
+func (j *Integration) SetRequestHeaders(req *http.Request) {
 }
 
 func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
