@@ -16,6 +16,7 @@ import (
 
 // MarshalRequest encodes the request body according to the endpoint for the API.
 func (j *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+	j.Logger.Debug("start of marshal")
 	var (
 		data []byte
 		err  error
