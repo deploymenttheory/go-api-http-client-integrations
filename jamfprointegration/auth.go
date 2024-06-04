@@ -66,7 +66,8 @@ func (j *Integration) getOauthToken() (string, error) {
 
 	j.Logger.Debug("Attempting to obtain OAuth token", zap.String("ClientID", j.ClientId))
 
-	req, err := http.NewRequest("POST", oAuthTokenEndpoint, strings.NewReader(data.Encode()))
+	oauthFullEndpoint := j.BaseDomain + oAuthTokenEndpoint
+	req, err := http.NewRequest("POST", oauthFullEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
 		j.Logger.Error("Failed to create request for OAuth token", zap.Error(err))
 		return "", err
