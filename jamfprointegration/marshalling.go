@@ -23,6 +23,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 		err  error
 	)
 
+	log.Println("marshal flag 2")
 	// Determine the format based on the endpoint
 	format := "json"
 	if strings.Contains(endpoint, "/JSSResource") {
@@ -30,6 +31,8 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 	} else if strings.Contains(endpoint, "/api") {
 		format = "json"
 	}
+
+	log.Println("marshal flag 3")
 
 	switch format {
 	case "xml":
