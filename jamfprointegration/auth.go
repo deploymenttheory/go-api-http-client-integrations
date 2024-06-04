@@ -81,6 +81,8 @@ func (j *Integration) getOauthToken() (string, error) {
 	}
 	defer resp.Body.Close()
 
+	log.Println(resp.StatusCode)
+
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		j.Logger.Error("Failed to read response body", zap.Error(err))
