@@ -28,7 +28,7 @@ type TokenResponse struct {
 }
 
 func (j *Integration) Token() (string, error) {
-	return ""
+	return "", nil
 }
 
 func (j Integration) Domain() string {
