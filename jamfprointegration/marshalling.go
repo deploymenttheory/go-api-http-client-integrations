@@ -60,7 +60,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
 			log.Println("marshal flag 8.1")
-			log.Println(data)
+			log.Println(string(data))
 			j.Logger.Debug("JSON Request Body", zap.String("Body", string(data)))
 			log.Println("marshal flag 8.2")
 		}
