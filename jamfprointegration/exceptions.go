@@ -19,9 +19,6 @@ type EndpointConfig struct {
 // that hold the configuration for that endpoint.
 type ConfigMap map[string]EndpointConfig
 
-// Variables
-var configMap ConfigMap
-
 // Embedded Resources
 //
 //go:embed exception_config.json

@@ -9,8 +9,8 @@ import (
 )
 
 func (j *Integration) setRequestHeaders(req *http.Request) {
-	req.Header.Add("test", "Test")
-	req.Header.Add("test2", "test4")
+	req.Header.Add("Accept", j.getAcceptHeader())
+	// req.Header.Add("Content-Type", j.getContentTypeHeader())
 }
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
@@ -22,18 +22,6 @@ func (j *Integration) setRequestHeaders(req *http.Request) {
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (j *Integration) getContentTypeHeader(endpoint string) string {
-	// Dynamic lookup from configuration should be the first priority
-	for key, config := range configMap {
-		if strings.HasPrefix(endpoint, key) {
-			if config.ContentType != nil {
-				j.Logger.Debug("Content-Type for endpoint found in configMap", zap.String("endpoint", endpoint), zap.String("content_type", *config.ContentType))
-				return *config.ContentType
-			}
-			j.Logger.Debug("Content-Type for endpoint is nil in configMap, handling as special case", zap.String("endpoint", endpoint))
-			// If a nil ContentType is an expected case, do not set Content-Type header.
-			return "" // Return empty to indicate no Content-Type should be set.
-		}
-	}
 
 	// If no specific configuration is found, then check for standard URL patterns.
 	if strings.Contains(endpoint, "/JSSResource") {
@@ -56,7 +44,7 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 // the server is informed of the client's versatile content handling capabilities while
 // indicating a preference for XML. The specified MIME types cover common content formats like
 // images, JSON, XML, HTML, plain text, and certificates, with a fallback option for all other types.
-func (j *Integration) GetAcceptHeader() string {
+func (j *Integration) getAcceptHeader() string {
 	weightedAcceptHeader := "application/x-x509-ca-cert;q=0.95," +
 		"application/pkix-cert;q=0.94," +
 		"application/pem-certificate-chain;q=0.93," +
@@ -76,12 +64,12 @@ func (j *Integration) GetAcceptHeader() string {
 }
 
 // GetAPIRequestHeaders returns a map of standard headers required for making API requests.
-func (j *Integration) GetAPIRequestHeaders(endpoint string) map[string]string {
+func (j *Integration) getAPIRequestHeaders(endpoint string) map[string]string {
 	headers := map[string]string{
-		"Accept":        j.GetAcceptHeader(),                  // Dynamically set based on API requirements.
-		"Content-Type":  j.getContentTypeHeader(endpoint),     // Dynamically set based on the endpoint.
-		"Authorization": "",                                   // To be set by the client with the actual token.
-		"User-Agent":    "go-api-http-client-jamfpro-handler", // To be set by the client, usually with application info.
+		"Accept":       j.getAcceptHeader(),              // Dynamically set based on API requirements.
+		"Content-Type": j.getContentTypeHeader(endpoint), // Dynamically set based on the endpoint.
+
+		"User-Agent": "go-api-http-client-jamfpro-integration", // To be set by the client, usually with application info.
 	}
 	return headers
 }
