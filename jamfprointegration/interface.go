@@ -20,6 +20,9 @@ type Integration struct {
 	BasicAuthUsername    string
 	BasicAuthPassword    string
 	AuthMethodDescriptor string
+	oauthTokenString     string
+	bearerTokenString    string
+	tokenExpiry          time.Time
 }
 
 type TokenResponse struct {
