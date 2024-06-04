@@ -28,11 +28,16 @@ func (j *Integration) token(config httpclient.ClientConfig) (string, error) {
 	var token string
 	switch j.AuthMethodDescriptor {
 	case "oauth2":
-		if j.tokenExpired(config) || j.tokenInBuffer(config) || j.oauthTokenString == "" {
+		if j.tokenExpired() || j.tokenInBuffer(config) || j.oauthTokenString == "" {
 			token, err = j.getOauthToken()
-			if j.tokenExpired(config) || j.tokenInBuffer(config) {
+			if j.tokenExpired() || j.tokenInBuffer(config) {
 				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 			}
+
+			if err != nil {
+				return "", err
+			}
+
 			return token, nil
 		}
 
@@ -42,10 +47,6 @@ func (j *Integration) token(config httpclient.ClientConfig) (string, error) {
 
 	default:
 		return "", errors.New("invalid auth method")
-	}
-
-	if err != nil {
-		return "", err
 	}
 
 	return token, nil
@@ -125,7 +126,7 @@ func (j *Integration) tokenInBuffer(config httpclient.ClientConfig) bool {
 	return true
 }
 
-func (j *Integration) tokenExpired(config httpclient.ClientConfig) bool {
+func (j *Integration) tokenExpired() bool {
 	if j.tokenExpiry.Before(time.Now()) {
 		return true
 	}
