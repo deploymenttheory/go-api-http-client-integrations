@@ -40,7 +40,7 @@ func (j *Integration) Domain() string {
 	return j.BaseDomain
 }
 
-func (j *Integration) PrepRequestParamsForIntegration(req *http.Request) error {
+func (j *Integration) PrepRequestParamsForIntegration(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
 	err := j.setRequestHeaders(req)
 	return err
 }
