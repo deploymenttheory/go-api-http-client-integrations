@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"github.com/deploymenttheory/go-api-http-client/logger"
 )
 
@@ -23,6 +24,7 @@ type Integration struct {
 	oauthTokenString     string
 	bearerTokenString    string
 	tokenExpiry          time.Time
+	clientConfig         httpclient.ClientConfig
 }
 
 type TokenResponse struct {
@@ -31,7 +33,7 @@ type TokenResponse struct {
 }
 
 func (j *Integration) Token() (string, error) {
-	return "", nil
+	return j.token(j.clientConfig)
 }
 
 func (j *Integration) Domain() string {
