@@ -55,6 +55,7 @@ func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 }
 
 func (j *Integration) getOauthToken() (string, error) {
+	log.Println("TEST TEST TEST TEST 58")
 
 	client := http.Client{}
 
@@ -124,8 +125,7 @@ func (j *Integration) keepAliveToken() (string, error) {
 }
 
 func (j *Integration) tokenInBuffer(bufferPeriod time.Duration) bool {
-	j.Logger.Warn(j.tokenExpiry.String())
-	j.Logger.Warn(bufferPeriod.String())
+
 	log.Println(j.tokenExpiry.String())
 	log.Println(bufferPeriod.String())
 	if time.Until(j.tokenExpiry) >= bufferPeriod {
