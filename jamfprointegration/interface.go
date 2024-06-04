@@ -48,10 +48,6 @@ func (j *Integration) MarshalMultipartRequest(fields map[string]string, files ma
 	return j.marshalMultipartRequest(fields, files)
 }
 
-func (j *Integration) GetContentTypeHeader(method string) string {
-	return ""
-}
-
 func (j *Integration) GetAuthMethodDescriptor() string {
 	return j.AuthMethodDescriptor
 }
