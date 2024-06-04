@@ -1,17 +1,26 @@
-// jamfpro_api_headers.go
 package jamfprointegration
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	"go.uber.org/zap"
 )
 
-func (j *Integration) setRequestHeaders(req *http.Request) {
+func (j *Integration) setRequestHeaders(req *http.Request) error {
 	req.Header.Add("Accept", j.getAcceptHeader())
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
+
+	token, err := j.Token()
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
+
+	return nil
 }
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.

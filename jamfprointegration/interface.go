@@ -35,11 +35,12 @@ func (j *Integration) Domain() string {
 	return j.BaseDomain
 }
 
-func (j *Integration) SetRequestHeaders(req *http.Request) {
-	j.setRequestHeaders(req)
+func (j *Integration) PrepRequestParamsForIntegration(req *http.Request) error {
+	err := j.setRequestHeaders(req)
+	return err
 }
 
-func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+func (j *Integration) PrepRequestBodyForIntergration(body interface{}, method string, endpoint string) ([]byte, error) {
 	return j.marshalRequest(body, method, endpoint)
 }
 
