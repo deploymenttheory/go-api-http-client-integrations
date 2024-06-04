@@ -11,6 +11,7 @@ import (
 func (j *Integration) setRequestHeaders(req *http.Request) {
 	req.Header.Add("Accept", j.getAcceptHeader())
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
+	req.Header.Add("User-Agent", j.getUserAgentHeader())
 }
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
@@ -22,17 +23,14 @@ func (j *Integration) setRequestHeaders(req *http.Request) {
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (j *Integration) getContentTypeHeader(endpoint string) string {
-
-	// If no specific configuration is found, then check for standard URL patterns.
 	if strings.Contains(endpoint, "/JSSResource") {
 		j.Logger.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
-		return "application/xml" // Classic API uses XML
+		return "application/xml"
 	} else if strings.Contains(endpoint, "/api") {
 		j.Logger.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
-		return "application/json" // JamfPro API uses JSON
+		return "application/json"
 	}
 
-	// Fallback to JSON if no other match is found.
 	j.Logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
 	return "application/json"
 }
@@ -63,13 +61,6 @@ func (j *Integration) getAcceptHeader() string {
 	return weightedAcceptHeader
 }
 
-// GetAPIRequestHeaders returns a map of standard headers required for making API requests.
-func (j *Integration) getAPIRequestHeaders(endpoint string) map[string]string {
-	headers := map[string]string{
-		"Accept":       j.getAcceptHeader(),              // Dynamically set based on API requirements.
-		"Content-Type": j.getContentTypeHeader(endpoint), // Dynamically set based on the endpoint.
-
-		"User-Agent": "go-api-http-client-jamfpro-integration", // To be set by the client, usually with application info.
-	}
-	return headers
+func (j *Integration) getUserAgentHeader() string {
+	return "go-api-http-client-jamfpro-integration"
 }
