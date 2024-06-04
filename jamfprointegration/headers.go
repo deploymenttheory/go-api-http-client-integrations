@@ -10,7 +10,7 @@ import (
 
 func (j *Integration) setRequestHeaders(req *http.Request) {
 	req.Header.Add("Accept", j.getAcceptHeader())
-	// req.Header.Add("Content-Type", j.getContentTypeHeader())
+	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 }
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
