@@ -36,15 +36,17 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 
 	switch format {
 	case "xml":
+		log.Println("marshal flag 4")
 		data, err = xml.Marshal(body)
 		if err != nil {
 			return nil, err
 		}
+		log.Println("marshal flag 5")
 
 		if method == "POST" || method == "PUT" {
 			j.Logger.Debug("XML Request Body", zap.String("Body", string(data)))
 		}
-
+		log.Println("marshal flag 6")
 		return data, nil
 
 	case "json":
