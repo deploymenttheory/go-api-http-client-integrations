@@ -105,7 +105,7 @@ func (j *Integration) getOauthToken() (string, error) {
 	j.oauthTokenString = oauthResp.AccessToken
 	j.tokenExpiry = expirationTime
 	log.Println(j.tokenExpiry)
-	log.Println(expirationTime)
+	log.Println(expiresIn)
 
 	return j.oauthTokenString, nil
 }
