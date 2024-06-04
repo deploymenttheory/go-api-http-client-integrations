@@ -50,15 +50,18 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 		return data, nil
 
 	case "json":
+		log.Println("marshal flag 7")
 		data, err = json.Marshal(body)
 		if err != nil {
 			j.Logger.Error("Failed marshaling JSON request", zap.Error(err))
 			return nil, err
 		}
+		log.Println("marshal flag 8")
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
 			j.Logger.Debug("JSON Request Body", zap.String("Body", string(data)))
 		}
+		log.Println("marshal flag 9")
 
 		return data, nil
 
