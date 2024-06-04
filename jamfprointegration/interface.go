@@ -3,7 +3,6 @@
 package jamfprointegration
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -40,7 +39,6 @@ func (j *Integration) SetRequestHeaders(req *http.Request) {
 }
 
 func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
-	fmt.Println("portal")
 	return j.marshalRequest(body, method, endpoint)
 }
 
