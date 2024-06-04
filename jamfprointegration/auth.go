@@ -118,6 +118,8 @@ func (j *Integration) keepAliveToken() (string, error) {
 }
 
 func (j *Integration) tokenInBuffer(bufferPeriod time.Duration) bool {
+	j.Logger.Warn(j.tokenExpiry.String())
+	j.Logger.Warn(bufferPeriod.String())
 	if time.Until(j.tokenExpiry) >= bufferPeriod {
 		return false
 	}
