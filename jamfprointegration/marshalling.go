@@ -7,7 +7,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"io"
-	"log"
 	"mime/multipart"
 	"path/filepath"
 	"strings"
@@ -32,35 +31,29 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 
 	switch format {
 	case "xml":
-		log.Println("marshal flag 4")
 		data, err = xml.Marshal(body)
 		if err != nil {
 			return nil, err
 		}
-		log.Println("marshal flag 5")
 
 		if method == "POST" || method == "PUT" {
 			j.Logger.Debug("XML Request Body", zap.String("Body", string(data)))
 		}
-		log.Println("marshal flag 6")
+
 		return data, nil
 
 	case "json":
-		log.Println("marshal flag 7")
 		data, err = json.Marshal(body)
 		if err != nil {
 			j.Logger.Error("Failed marshaling JSON request", zap.Error(err))
 			return nil, err
 		}
-		log.Println("marshal flag 8")
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
-			log.Println("marshal flag 8.1")
-			log.Println(string(data))
+			// TODO it hates this?
 			// j.Logger.Debug("JSON Request Body", zap.String("Body", string(data)))
-			log.Println("marshal flag 8.2")
+
 		}
-		log.Println("marshal flag 9")
 
 		return data, nil
 
