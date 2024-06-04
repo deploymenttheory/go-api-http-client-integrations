@@ -36,6 +36,7 @@ func (j *Integration) Domain() string {
 }
 
 func (j *Integration) SetRequestHeaders(req *http.Request) {
+	j.setRequestHeaders(req)
 }
 
 func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {

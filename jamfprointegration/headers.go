@@ -2,10 +2,15 @@
 package jamfprointegration
 
 import (
+	"net/http"
 	"strings"
 
 	"go.uber.org/zap"
 )
+
+func (j *Integration) setRequestHeaders(req *http.Request) {
+	req.Header.Add("test", "Test")
+}
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
 // It attempts to find a content type that matches the endpoint prefix in the global configMap.
