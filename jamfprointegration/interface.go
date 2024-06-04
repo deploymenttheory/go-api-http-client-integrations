@@ -31,8 +31,8 @@ func (j *Integration) Token() (string, error) {
 	return "", nil
 }
 
-func (j Integration) Domain() string {
-	return ""
+func (j *Integration) Domain() string {
+	return j.BaseDomain
 }
 
 func (j *Integration) SetRequestHeaders(req *http.Request) {
