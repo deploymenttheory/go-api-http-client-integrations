@@ -39,6 +39,7 @@ func (j *Integration) SetRequestHeaders(req *http.Request) {
 }
 
 func (j *Integration) MarshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+	j.Logger.Debug("portal")
 	return j.marshalRequest(body, method, endpoint)
 }
 
