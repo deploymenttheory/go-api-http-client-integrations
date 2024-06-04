@@ -10,6 +10,7 @@ import (
 
 func (j *Integration) setRequestHeaders(req *http.Request) {
 	req.Header.Add("test", "Test")
+	req.Header.Add("test2", "test4")
 }
 
 // GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
