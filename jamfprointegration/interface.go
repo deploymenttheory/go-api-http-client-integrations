@@ -32,8 +32,8 @@ type TokenResponse struct {
 	Expires time.Time `json:"expires"`
 }
 
-func (j *Integration) Token() (string, error) {
-	return j.token(j.clientConfig)
+func (j *Integration) Token(tokenRefreshBufferPeriod time.Duration) (string, error) {
+	return j.token(tokenRefreshBufferPeriod)
 }
 
 func (j *Integration) Domain() string {
@@ -41,7 +41,7 @@ func (j *Integration) Domain() string {
 }
 
 func (j *Integration) PrepRequestParamsForIntegration(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
-	err := j.setRequestHeaders(req)
+	err := j.setRequestHeaders(req, tokenRefreshBufferPeriod)
 	return err
 }
 

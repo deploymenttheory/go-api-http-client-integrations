@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"go.uber.org/zap"
 )
 
-func (j *Integration) setRequestHeaders(req *http.Request) error {
+func (j *Integration) setRequestHeaders(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
 	req.Header.Add("Accept", j.getAcceptHeader())
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
 
-	token, err := j.Token()
+	token, err := j.token(tokenRefreshBufferPeriod)
 	if err != nil {
 		return err
 	}

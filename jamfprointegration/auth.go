@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -23,14 +22,14 @@ type OAuthResponse struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
-func (j *Integration) token(config httpclient.ClientConfig) (string, error) {
+func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 	var err error
 	var token string
 	switch j.AuthMethodDescriptor {
 	case "oauth2":
-		if j.tokenExpired() || j.tokenInBuffer(config) || j.oauthTokenString == "" {
+		if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) || j.oauthTokenString == "" {
 			token, err = j.getOauthToken()
-			if j.tokenExpired() || j.tokenInBuffer(config) {
+			if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) {
 				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 			}
 
@@ -118,8 +117,8 @@ func (j *Integration) keepAliveToken() (string, error) {
 	return "", nil
 }
 
-func (j *Integration) tokenInBuffer(config httpclient.ClientConfig) bool {
-	if time.Until(j.tokenExpiry) >= config.TokenRefreshBufferPeriod {
+func (j *Integration) tokenInBuffer(bufferPeriod time.Duration) bool {
+	if time.Until(j.tokenExpiry) >= bufferPeriod {
 		return false
 	}
 
