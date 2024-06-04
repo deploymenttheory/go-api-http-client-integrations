@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -31,8 +30,6 @@ func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 		if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) || j.oauthTokenString == "" {
 			token, err = j.getOauthToken()
 			if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) {
-				log.Println(j.tokenExpired())
-				log.Println(j.tokenExpiry)
 				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 			}
 
@@ -122,13 +119,9 @@ func (j *Integration) keepAliveToken() (string, error) {
 }
 
 func (j *Integration) tokenInBuffer(bufferPeriod time.Duration) bool {
-	log.Println("LOGHERE")
-	log.Println(j.tokenExpiry.String())
-	log.Println(bufferPeriod.String())
 	if time.Until(j.tokenExpiry) >= bufferPeriod {
 		return false
 	}
-
 	return true
 }
 
@@ -136,6 +129,5 @@ func (j *Integration) tokenExpired() bool {
 	if j.tokenExpiry.Before(time.Now()) {
 		return true
 	}
-
 	return false
 }
