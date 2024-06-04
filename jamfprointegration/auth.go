@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -22,15 +23,22 @@ type OAuthResponse struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
-func (j *Integration) token() (string, error) {
+func (j *Integration) token(config httpclient.ClientConfig) (string, error) {
 	var err error
 	var token string
 	switch j.AuthMethodDescriptor {
 	case "oauth2":
-		token, err = j.oauthToken()
+		if j.tokenExpired(config) || j.tokenInBuffer(config) || j.oauthTokenString == "" {
+			token, err = j.getOauthToken()
+			if j.tokenExpired(config) || j.tokenInBuffer(config) {
+				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
+			}
+			return token, nil
+		}
 
-	case "basic":
-		token, err = j.basicToken()
+	case "bearer":
+		return "", errors.New("Not implemented")
+		// token, err = j.getBasicToken()
 
 	default:
 		return "", errors.New("invalid auth method")
@@ -43,7 +51,7 @@ func (j *Integration) token() (string, error) {
 	return token, nil
 }
 
-func (j *Integration) oauthToken() (string, error) {
+func (j *Integration) getOauthToken() (string, error) {
 
 	client := http.Client{}
 
@@ -97,7 +105,7 @@ func (j *Integration) oauthToken() (string, error) {
 	return j.oauthTokenString, nil
 }
 
-func (j *Integration) basicToken() (string, error) {
+func (j *Integration) getBasicToken() (string, error) {
 	return "", nil
 }
 
@@ -109,10 +117,18 @@ func (j *Integration) keepAliveToken() (string, error) {
 	return "", nil
 }
 
-func (j *Integration) tokenInBuffer() (bool, error) {
-	return true, nil
+func (j *Integration) tokenInBuffer(config httpclient.ClientConfig) bool {
+	if time.Until(j.tokenExpiry) >= config.TokenRefreshBufferPeriod {
+		return false
+	}
+
+	return true
 }
 
-func (j *Integration) tokenExpired() (bool, error) {
-	return true, nil
+func (j *Integration) tokenExpired(config httpclient.ClientConfig) bool {
+	if j.tokenExpiry.Before(time.Now()) {
+		return true
+	}
+
+	return false
 }
