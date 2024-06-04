@@ -32,7 +32,7 @@ func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 			token, err = j.getOauthToken()
 			if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) {
 				log.Println(j.tokenExpired())
-				log.Println(bufferPeriod.Abs().Seconds())
+				log.Println(j.tokenExpiry)
 				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 			}
 
