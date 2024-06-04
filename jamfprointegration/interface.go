@@ -36,7 +36,6 @@ func (j *Integration) Domain() string {
 }
 
 func (j *Integration) SetRequestHeaders(req *http.Request) {
-	j.Logger.Debug("test DEBUG")
 	j.setRequestHeaders(req)
 }
 
