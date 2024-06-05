@@ -14,7 +14,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// OAuthResponse represents the response structure when obtaining an OAuth access token.
+// OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
 type OAuthResponse struct {
 	AccessToken  string `json:"access_token"`
 	ExpiresIn    int64  `json:"expires_in"`
@@ -52,34 +52,31 @@ func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 }
 
 func (j *Integration) getOauthToken() (string, error) {
-
 	client := http.Client{}
-
 	data := url.Values{}
+
 	data.Set("client_id", j.ClientId)
 	data.Set("client_secret", j.ClientSecret)
 	data.Set("grant_type", "client_credentials")
 
 	j.Logger.Debug("Attempting to obtain OAuth token", zap.String("ClientID", j.ClientId))
 
-	oauthFullEndpoint := j.BaseDomain + oAuthTokenEndpoint
-	req, err := http.NewRequest("POST", oauthFullEndpoint, strings.NewReader(data.Encode()))
+	oauthComlpeteEndpoint := j.BaseDomain + oAuthTokenEndpoint
+	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
-		j.Logger.Error("Failed to create request for OAuth token", zap.Error(err))
 		return "", err
 	}
+
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		j.Logger.Error("Failed to execute request for OAuth token", zap.Error(err))
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		j.Logger.Error("Failed to read response body", zap.Error(err))
 		return "", err
 	}
 
@@ -88,12 +85,10 @@ func (j *Integration) getOauthToken() (string, error) {
 	oauthResp := &OAuthResponse{}
 	err = json.Unmarshal(bodyBytes, oauthResp)
 	if err != nil {
-		j.Logger.Error("Failed to decode OAuth response", zap.Error(err))
 		return "", fmt.Errorf("failed to decode OAuth response: %w", err)
 	}
 
 	if oauthResp.AccessToken == "" {
-		j.Logger.Error("Empty access token received")
 		return "", fmt.Errorf("empty access token received")
 	}
 
@@ -104,18 +99,6 @@ func (j *Integration) getOauthToken() (string, error) {
 	j.tokenExpiry = expirationTime
 
 	return j.oauthTokenString, nil
-}
-
-func (j *Integration) getBasicToken() (string, error) {
-	return "", nil
-}
-
-func (j *Integration) invalidateToken() (string, error) {
-	return "", nil
-}
-
-func (j *Integration) keepAliveToken() (string, error) {
-	return "", nil
 }
 
 func (j *Integration) tokenInBuffer(bufferPeriod time.Duration) bool {
@@ -131,3 +114,20 @@ func (j *Integration) tokenExpired() bool {
 	}
 	return false
 }
+
+//////////////// TODO
+
+// func (j *Integration) getBasicToken() (string, error) {
+// 	// TODO getBasicToken
+// 	return "", nil
+// }
+
+// func (j *Integration) invalidateToken() (string, error) {
+// 	// TODO invalidateToken
+// 	return "", nil
+// }
+
+// func (j *Integration) keepAliveToken() (string, error) {
+// 	// TODO keepAliveToken
+// 	return "", nil
+// }

@@ -41,7 +41,7 @@ func (j *Integration) Domain() string {
 }
 
 func (j *Integration) PrepRequestParamsForIntegration(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
-	err := j.setRequestHeaders(req, tokenRefreshBufferPeriod)
+	err := j.prepRequest(req, tokenRefreshBufferPeriod)
 	return err
 }
 

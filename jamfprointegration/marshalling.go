@@ -50,7 +50,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 		}
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
-			// TODO it hates this?
+			// TODO it hates this, pointer dereference on this log? Weird.
 			// j.Logger.Debug("JSON Request Body", zap.String("Body", string(data)))
 
 		}
@@ -67,14 +67,12 @@ func (j *Integration) marshalMultipartRequest(fields map[string]string, files ma
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
-	// Add the simple fields to the form data
 	for field, value := range fields {
 		if err := writer.WriteField(field, value); err != nil {
 			return nil, "", err
 		}
 	}
 
-	// Add the files to the form data, using safeOpenFile to ensure secure file access
 	for formField, filePath := range files {
 		file, err := SafeOpenFile(filePath)
 		if err != nil {
@@ -92,7 +90,6 @@ func (j *Integration) marshalMultipartRequest(fields map[string]string, files ma
 		}
 	}
 
-	// Close the writer to finish writing the multipart message
 	contentType := writer.FormDataContentType()
 	if err := writer.Close(); err != nil {
 		return nil, "", err
