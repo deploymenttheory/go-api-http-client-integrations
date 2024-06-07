@@ -57,10 +57,3 @@ func (j *Integration) MarshalMultipartRequest(fields map[string]string, files ma
 func (j *Integration) GetAuthMethodDescriptor() string {
 	return j.AuthMethodDescriptor
 }
-
-type auth interface {
-	tokenExpired() bool
-	tokenInBuffer(tokenRefreshBufferPeriod time.Duration) bool
-	tokenEmpty() bool
-	getNewToken() error
-}

@@ -58,3 +58,10 @@ func (a *basicAuth) getBasicToken() error {
 
 	return nil
 }
+
+func (a *basicAuth) tokenEmpty() bool {
+	if a.bearerToken == "" {
+		return true
+	}
+	return false
+}
