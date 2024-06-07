@@ -117,16 +117,6 @@ func (j *Integration) tokenExpired() bool {
 
 //////////////// TODO
 
-// func (j *Integration) getBasicToken() (string, error) {
-// 	// TODO getBasicToken
-// 	return "", nil
-// }
-
-// func (j *Integration) invalidateToken() (string, error) {
-// 	// TODO invalidateToken
-// 	return "", nil
-// }
-
 // func (j *Integration) keepAliveToken() (string, error) {
 // 	// TODO keepAliveToken
 // 	return "", nil
@@ -134,7 +124,7 @@ func (j *Integration) tokenExpired() bool {
 
 ///////////////////////////////
 
-func (j *Integration) GetBasicToken() error {
+func (j *Integration) getBasicToken() error {
 	client := http.Client{}
 
 	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)
