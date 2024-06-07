@@ -22,6 +22,12 @@ type OAuthResponse struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
+type oauth struct {
+	clientId     string
+	clientSecret string
+	expiryTime   time.Time
+}
+
 func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 	var err error
 	var token string
@@ -123,38 +129,3 @@ func (j *Integration) tokenExpired() bool {
 // }
 
 ///////////////////////////////
-
-func (j *Integration) getBasicToken() error {
-	client := http.Client{}
-
-	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)
-	if err != nil {
-		return err
-	}
-	req.SetBasicAuth(j.BasicAuthUsername, j.BasicAuthPassword)
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("received non-OK response status: %d", resp.StatusCode)
-	}
-
-	// TODO generalise this struct somehow
-	tokenResp := &TokenResponse{}
-	err = json.NewDecoder(resp.Body).Decode(tokenResp)
-	if err != nil {
-		return err
-	}
-
-	j.bearerTokenString = tokenResp.Token
-	j.tokenExpiry = tokenResp.Expires
-	tokenDuration := time.Until(j.tokenExpiry)
-
-	j.Logger.Info("Token obtained successfully", zap.Time("Expiry", j.tokenExpiry), zap.Duration("Duration", tokenDuration))
-
-	return nil
-}
