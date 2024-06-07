@@ -28,6 +28,7 @@ type oauth struct {
 	clientSecret string
 	expiryTime   time.Time
 	Logger       logger.Logger
+	token        string
 }
 
 func (a *oauth) getOauthToken(tokenHome *string, expiryHome *time.Time) error {

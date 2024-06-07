@@ -12,24 +12,23 @@ type auth interface {
 	getNewToken() error
 }
 
-func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
+func (j *Integration) token(bufferPeriod time.Duration) error {
 	var err error
-	var token string
 	if j.auth.tokenEmpty() {
 		j.Logger.Warn("token empty - disregard if first run")
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer(bufferPeriod) || j.auth.tokenEmpty() {
-			token, err = j.getOauthToken()
+			err = j.auth.getNewToken()
 
 			if j.auth.tokenExpired() || j.auth.tokenInBuffer(bufferPeriod) {
-				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
+				return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 			}
 
 			if err != nil {
-				return "", err
+				return err
 			}
 
-			return token, nil
+			return nil
 		}
 	}
-	return token, nil
+	return nil
 }

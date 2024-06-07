@@ -33,7 +33,7 @@ type TokenResponse struct {
 	Expires time.Time `json:"expires"`
 }
 
-func (j *Integration) Token(tokenRefreshBufferPeriod time.Duration) (string, error) {
+func (j *Integration) Token(tokenRefreshBufferPeriod time.Duration) error {
 	return j.token(tokenRefreshBufferPeriod)
 }
 

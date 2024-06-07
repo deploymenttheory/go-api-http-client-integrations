@@ -12,12 +12,12 @@ func (j *Integration) prepRequest(req *http.Request, tokenRefreshBufferPeriod ti
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
 
-	token, err := j.token(tokenRefreshBufferPeriod)
+	err := j.token(tokenRefreshBufferPeriod)
 	if err != nil {
 		return err
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", j.Token()))
 
 	return nil
 }
