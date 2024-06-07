@@ -1,7 +1,17 @@
 package jamfprointegration
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"strings"
 	"time"
+
+	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 // OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
@@ -16,4 +26,69 @@ type oauth struct {
 	clientId     string
 	clientSecret string
 	expiryTime   time.Time
+	Logger       logger.Logger
+}
+
+func (a *oauth) getOauthToken() (string, error) {
+	client := http.Client{}
+	data := url.Values{}
+
+	data.Set("client_id", a.clientId)
+	data.Set("client_secret", a.clientSecret)
+	data.Set("grant_type", "client_credentials")
+
+	a.Logger.Debug("Attempting to obtain OAuth token", zap.String("ClientID", a.clientId))
+
+	oauthComlpeteEndpoint := j.BaseDomain + oAuthTokenEndpoint
+	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+	oauthResp := &OAuthResponse{}
+	err = json.Unmarshal(bodyBytes, oauthResp)
+	if err != nil {
+		return "", fmt.Errorf("failed to decode OAuth response: %w", err)
+	}
+
+	if oauthResp.AccessToken == "" {
+		return "", fmt.Errorf("empty access token received")
+	}
+
+	expiresIn := time.Duration(oauthResp.ExpiresIn) * time.Second
+	expirationTime := time.Now().Add(expiresIn)
+
+	j.oauthTokenString = oauthResp.AccessToken
+	j.tokenExpiry = expirationTime
+
+	return j.oauthTokenString, nil
+}
+
+func (a *oauth) tokenInBuffer(bufferPeriod time.Duration) bool {
+	if time.Until(j.tokenExpiry) >= bufferPeriod {
+		return false
+	}
+	return true
+}
+
+func (a *oauth) tokenExpired() bool {
+	if j.tokenExpiry.Before(time.Now()) {
+		return true
+	}
+	return false
 }
