@@ -25,6 +25,7 @@ type Integration struct {
 	bearerTokenString    string
 	tokenExpiry          time.Time
 	clientConfig         httpclient.ClientConfig
+	auth                 auth
 }
 
 type TokenResponse struct {
@@ -59,7 +60,7 @@ func (j *Integration) GetAuthMethodDescriptor() string {
 
 type auth interface {
 	tokenExpired() bool
-	tokenInBuffer() bool
+	tokenInBuffer(tokenRefreshBufferPeriod time.Duration) bool
 	tokenEmpty() bool
 	getNewToken() error
 }

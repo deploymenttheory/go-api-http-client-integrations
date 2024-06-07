@@ -31,27 +31,17 @@ type oauth struct {
 func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
 	var err error
 	var token string
-	switch j.AuthMethodDescriptor {
-	case "oauth2":
-		if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) || j.oauthTokenString == "" {
-			token, err = j.getOauthToken()
-			if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) {
-				return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
-			}
-
-			if err != nil {
-				return "", err
-			}
-
-			return token, nil
+	if j.auth.tokenExpired() || j.auth.tokenInBuffer(bufferPeriod) || j.oauthTokenString == "" {
+		token, err = j.getOauthToken()
+		if j.tokenExpired() || j.tokenInBuffer(bufferPeriod) {
+			return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 		}
 
-	case "bearer":
-		return "", errors.New("Not implemented")
-		// token, err = j.getBasicToken()
+		if err != nil {
+			return "", err
+		}
 
-	default:
-		return "", errors.New("invalid auth method")
+		return token, nil
 	}
 
 	return token, nil
