@@ -23,13 +23,14 @@ type OAuthResponse struct {
 }
 
 type oauth struct {
+	baseDomain   string
 	clientId     string
 	clientSecret string
 	expiryTime   time.Time
 	Logger       logger.Logger
 }
 
-func (a *oauth) getOauthToken() (string, error) {
+func (a *oauth) getOauthToken(tokenHome *string, expiryHome *time.Time) error {
 	client := http.Client{}
 	data := url.Values{}
 
@@ -39,23 +40,23 @@ func (a *oauth) getOauthToken() (string, error) {
 
 	a.Logger.Debug("Attempting to obtain OAuth token", zap.String("ClientID", a.clientId))
 
-	oauthComlpeteEndpoint := j.BaseDomain + oAuthTokenEndpoint
+	oauthComlpeteEndpoint := a.baseDomain + oAuthTokenEndpoint
 	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return err
 	}
 	defer resp.Body.Close()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return err
 	}
 
 	resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
@@ -63,31 +64,31 @@ func (a *oauth) getOauthToken() (string, error) {
 	oauthResp := &OAuthResponse{}
 	err = json.Unmarshal(bodyBytes, oauthResp)
 	if err != nil {
-		return "", fmt.Errorf("failed to decode OAuth response: %w", err)
+		return fmt.Errorf("failed to decode OAuth response: %w", err)
 	}
 
 	if oauthResp.AccessToken == "" {
-		return "", fmt.Errorf("empty access token received")
+		return fmt.Errorf("empty access token received")
 	}
 
 	expiresIn := time.Duration(oauthResp.ExpiresIn) * time.Second
 	expirationTime := time.Now().Add(expiresIn)
 
-	j.oauthTokenString = oauthResp.AccessToken
-	j.tokenExpiry = expirationTime
+	*tokenHome = oauthResp.AccessToken
+	*expiryHome = expirationTime
 
-	return j.oauthTokenString, nil
+	return nil
 }
 
 func (a *oauth) tokenInBuffer(bufferPeriod time.Duration) bool {
-	if time.Until(j.tokenExpiry) >= bufferPeriod {
+	if time.Until(a.expiryTime) >= bufferPeriod {
 		return false
 	}
 	return true
 }
 
 func (a *oauth) tokenExpired() bool {
-	if j.tokenExpiry.Before(time.Now()) {
+	if a.expiryTime.Before(time.Now()) {
 		return true
 	}
 	return false
