@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) *Integration {
@@ -48,6 +49,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 	j.Logger.Debug(authInterface.expiryTime.String())
 	j.CheckRefreshToken()
 	j.Logger.Debug(authInterface.expiryTime.String())
+	j.Logger.Debug("in buffer", zap.Bool("in buffer:", j.auth.tokenInBuffer()))
 
 }
 
