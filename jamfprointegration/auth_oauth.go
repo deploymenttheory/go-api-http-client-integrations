@@ -14,13 +14,16 @@ import (
 )
 
 type oauth struct {
+	// Set
 	baseDomain   string
 	clientId     string
 	clientSecret string
-	expiryTime   time.Time
-	Logger       logger.Logger
-	token        string
 	bufferPeriod time.Duration
+	Logger       logger.Logger
+
+	// Computed
+	expiryTime time.Time
+	token      string
 }
 
 // OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
@@ -85,18 +88,18 @@ func (a *oauth) getTokenString() string {
 
 // Utils
 
-func (a *oauth) tokenInBuffer() bool {
-	if time.Until(a.expiryTime) >= a.bufferPeriod {
-		return false
-	}
-	return true
-}
-
 func (a *oauth) tokenExpired() bool {
 	if a.expiryTime.Before(time.Now()) {
 		return true
 	}
 	return false
+}
+
+func (a *oauth) tokenInBuffer() bool {
+	if time.Until(a.expiryTime) >= a.bufferPeriod {
+		return false
+	}
+	return true
 }
 
 func (a *oauth) tokenEmpty() bool {

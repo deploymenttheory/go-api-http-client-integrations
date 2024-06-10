@@ -11,7 +11,7 @@ func (j *Integration) prepRequest(req *http.Request) error {
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
 
-	err := j.CheckRefreshToken()
+	err := j.checkRefreshToken()
 	if err != nil {
 		return err
 	}

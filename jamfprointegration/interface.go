@@ -4,7 +4,6 @@ package jamfprointegration
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
 )
@@ -18,15 +17,23 @@ type Integration struct {
 	auth                 authInterface
 }
 
-func (j *Integration) CheckRefreshToken() error {
-	return j.checkRefreshToken()
-}
+// Info
 
 func (j *Integration) Domain() string {
 	return j.BaseDomain
 }
 
-func (j *Integration) PrepRequestParams(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
+func (j *Integration) GetAuthMethodDescriptor() string {
+	return j.AuthMethodDescriptor
+}
+
+// Utilities
+
+func (j *Integration) CheckRefreshToken() error {
+	return j.checkRefreshToken()
+}
+
+func (j *Integration) PrepRequestParamsAndAuth(req *http.Request) error {
 	err := j.prepRequest(req)
 	return err
 }
@@ -37,8 +44,4 @@ func (j *Integration) PrepRequestBody(body interface{}, method string, endpoint 
 
 func (j *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return j.marshalMultipartRequest(fields, files)
-}
-
-func (j *Integration) GetAuthMethodDescriptor() string {
-	return j.AuthMethodDescriptor
 }

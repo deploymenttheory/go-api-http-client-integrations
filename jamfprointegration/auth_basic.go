@@ -11,14 +11,17 @@ import (
 )
 
 type basicAuth struct {
-	baseDomain            string
-	username              string
-	password              string
+	// Set
+	baseDomain   string
+	username     string
+	password     string
+	bufferPeriod time.Duration
+	logger       logger.Logger
+
+	// Computed
 	basicToken            string
 	bearerToken           string
 	bearerTokenExpiryTime time.Time
-	bufferPeriod          time.Duration
-	logger                logger.Logger
 }
 
 type basicAuthResponse struct {
