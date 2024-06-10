@@ -20,13 +20,13 @@ type basicAuth struct {
 }
 
 type basicAuthResponse struct {
-	token  string
-	expiry time.Time
+	Token   string    `json:"token"`
+	Expires time.Time `json:"expires"`
 }
 
 // Operations
 
-func (a *basicAuth) getNewToken() error {
+func (a *basicAuth) checkRefreshToken() error {
 	client := http.Client{}
 
 	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)
@@ -60,7 +60,7 @@ func (a *basicAuth) getNewToken() error {
 	return nil
 }
 
-func (a *basicAuth) tokenString() string {
+func (a *basicAuth) getTokenString() string {
 	return a.bearerToken
 }
 

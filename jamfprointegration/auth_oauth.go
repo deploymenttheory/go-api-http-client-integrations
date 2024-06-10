@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
-	"go.uber.org/zap"
 )
 
 type oauth struct {
@@ -21,6 +20,7 @@ type oauth struct {
 	expiryTime   time.Time
 	Logger       logger.Logger
 	token        string
+	bufferPeriod time.Duration
 }
 
 // OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
@@ -33,15 +33,13 @@ type OAuthResponse struct {
 
 // Operations
 
-func (a *oauth) getNewToken(tokenHome *string, expiryHome *time.Time) error {
+func (a *oauth) checkRefreshToken() error {
 	client := http.Client{}
 	data := url.Values{}
 
 	data.Set("client_id", a.clientId)
 	data.Set("client_secret", a.clientSecret)
 	data.Set("grant_type", "client_credentials")
-
-	a.Logger.Debug("Attempting to obtain OAuth token", zap.String("ClientID", a.clientId))
 
 	oauthComlpeteEndpoint := a.baseDomain + oAuthTokenEndpoint
 	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
@@ -75,22 +73,20 @@ func (a *oauth) getNewToken(tokenHome *string, expiryHome *time.Time) error {
 	}
 
 	expiresIn := time.Duration(oauthResp.ExpiresIn) * time.Second
-	expirationTime := time.Now().Add(expiresIn)
-
-	*tokenHome = oauthResp.AccessToken
-	*expiryHome = expirationTime
+	a.expiryTime = time.Now().Add(expiresIn)
+	a.token = oauthResp.AccessToken
 
 	return nil
 }
 
-func (a *oauth) tokenString() string {
+func (a *oauth) getTokenString() string {
 	return a.token
 }
 
 // Utils
 
-func (a *oauth) tokenInBuffer(bufferPeriod time.Duration) bool {
-	if time.Until(a.expiryTime) >= bufferPeriod {
+func (a *oauth) tokenInBuffer() bool {
+	if time.Until(a.expiryTime) >= a.bufferPeriod {
 		return false
 	}
 	return true
