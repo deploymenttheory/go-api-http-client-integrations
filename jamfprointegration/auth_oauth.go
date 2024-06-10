@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 type oauth struct {
@@ -100,6 +101,7 @@ func (a *oauth) tokenExpired() bool {
 }
 
 func (a *oauth) tokenInBuffer() bool {
+	a.Logger.Debug("Time until expiry", zap.String("val", time.Until(a.expiryTime).String()))
 	if time.Until(a.expiryTime) >= a.bufferPeriod {
 		return false
 	}
