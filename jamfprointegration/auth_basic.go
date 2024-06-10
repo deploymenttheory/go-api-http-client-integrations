@@ -11,6 +11,7 @@ import (
 )
 
 type basicAuth struct {
+	baseDomain            string
 	username              string
 	password              string
 	basicToken            string
@@ -45,7 +46,7 @@ func (a *basicAuth) checkRefreshToken() error {
 		return fmt.Errorf("received non-OK response status: %d", resp.StatusCode)
 	}
 
-	tokenResp := &TokenResponse{}
+	tokenResp := &basicAuthResponse{}
 	err = json.NewDecoder(resp.Body).Decode(tokenResp)
 	if err != nil {
 		return err
