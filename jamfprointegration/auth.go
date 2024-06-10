@@ -2,37 +2,43 @@ package jamfprointegration
 
 import (
 	"errors"
-	"time"
+)
+
+const (
+	tokenEmptyWarnString = "token empty before processing - disregard if first run"
 )
 
 type auth interface {
 	tokenExpired() bool
-	tokenInBuffer(tokenRefreshBufferPeriod time.Duration) bool
+	tokenInBuffer() bool
 	tokenEmpty() bool
 	getNewToken() (string, error)
+	tokenString() string
 }
 
-func (j *Integration) token(bufferPeriod time.Duration) (string, error) {
+func (j *Integration) token() (string, error) {
 	var err error
 	var token string
 
 	if j.auth.tokenEmpty() {
-		j.Logger.Warn("token empty before processing - disregard if first run")
+		j.Logger.Warn(tokenEmptyWarnString)
 	}
 
-	if j.auth.tokenExpired() || j.auth.tokenInBuffer(bufferPeriod) || j.auth.tokenEmpty() {
+	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
 		token, err = j.auth.getNewToken()
 
 		if err != nil {
 			return "", err
 		}
 
-		if j.auth.tokenExpired() || j.auth.tokenInBuffer(bufferPeriod) {
+		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
 			return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 		}
 
-		return "", err
+		return token, nil
 	}
+
+	token = j.auth.tokenString()
 
 	return token, nil
 }
