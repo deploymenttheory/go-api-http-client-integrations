@@ -101,7 +101,7 @@ func (a *oauth) tokenExpired() bool {
 }
 
 func (a *oauth) tokenInBuffer() bool {
-	a.Logger.Debug("Time until expiry", zap.String("val", time.Until(a.expiryTime).String()))
+	a.Logger.Debug("log", zap.String("time until", time.Until(a.expiryTime).String()), zap.String("expiry time", a.bufferPeriod.String()))
 	if time.Until(a.expiryTime) >= a.bufferPeriod {
 		return false
 	}
