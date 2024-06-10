@@ -4,10 +4,9 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
-	"go.uber.org/zap"
 )
 
-func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) *Integration {
+func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		InstanceName:         jamfInstanceName,
@@ -16,11 +15,12 @@ func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, l
 	}
 
 	integration.BuildOAuth(clientId, clientSecret, bufferPeriod)
+	err := integration.CheckRefreshToken()
 
-	return &integration
+	return &integration, err
 }
 
-func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) *Integration {
+func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		InstanceName:         jamfInstanceName,
@@ -29,8 +29,9 @@ func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName strin
 	}
 
 	integration.BuildBasicAuth(username, password, bufferPeriod)
+	err := integration.CheckRefreshToken()
 
-	return &integration
+	return &integration, err
 }
 
 func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration) {
@@ -46,11 +47,6 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 	}
 
 	j.auth = &authInterface
-	j.Logger.Debug(authInterface.expiryTime.String())
-	j.CheckRefreshToken()
-	j.Logger.Debug(authInterface.expiryTime.String())
-	j.Logger.Debug("in buffer", zap.Bool("in buffer:", j.auth.tokenInBuffer()))
-
 }
 
 func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration) {
@@ -64,5 +60,4 @@ func (j *Integration) BuildBasicAuth(username string, password string, bufferPer
 	}
 
 	j.auth = &authInterface
-	j.CheckRefreshToken()
 }
