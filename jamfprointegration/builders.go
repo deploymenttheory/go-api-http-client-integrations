@@ -45,6 +45,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 	}
 
 	j.auth = &authInterface
+	j.Logger.Debug(authInterface.expiryTime.String())
 	j.CheckRefreshToken()
 
 }

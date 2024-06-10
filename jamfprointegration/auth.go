@@ -34,7 +34,6 @@ func (j *Integration) checkRefreshToken() error {
 		if err != nil {
 			return err
 		}
-
 		// Protects against bad token lifetime/buffer combinations (infinite loops)
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
 			return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
