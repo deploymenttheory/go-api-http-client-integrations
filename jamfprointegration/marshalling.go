@@ -51,8 +51,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
 			// TODO it hates this, pointer dereference on this log? Weird.
-			j.Logger.Debug("JSON Request Body:")
-			j.Logger.Debug(string(data))
+			j.Logger.Debug("JSON Request Body:", zap.Dict(string(data)))
 
 		}
 
