@@ -10,7 +10,7 @@ const (
 
 type authInterface interface {
 	// Token Operations
-	checkRefreshToken() error
+	getNewToken() error
 	getTokenString() string
 
 	// Token Utils
@@ -19,7 +19,7 @@ type authInterface interface {
 	tokenEmpty() bool
 }
 
-func (j *Integration) token() (string, error) {
+func (j *Integration) checkRefreshToken() error {
 	var err error
 
 	if j.auth.tokenEmpty() {
@@ -27,18 +27,18 @@ func (j *Integration) token() (string, error) {
 	}
 
 	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
-		err = j.auth.checkRefreshToken()
+		err = j.auth.getNewToken()
 
 		if err != nil {
-			return "", err
+			return err
 		}
 
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
-			return "", errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
+			return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 		}
 
-		return j.auth.getTokenString(), nil
+		return nil
 	}
 
-	return j.auth.getTokenString(), nil
+	return nil
 }

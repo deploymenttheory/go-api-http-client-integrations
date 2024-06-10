@@ -27,7 +27,7 @@ type basicAuthResponse struct {
 
 // Operations
 
-func (a *basicAuth) checkRefreshToken() error {
+func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
 	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)

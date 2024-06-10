@@ -40,7 +40,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string) {
 	}
 
 	j.auth = &authInterface
-	j.auth.checkRefreshToken()
+	j.CheckRefreshToken()
 
 }
 
@@ -54,5 +54,5 @@ func (j *Integration) BuildBasicAuth(username string, password string) {
 	}
 
 	j.auth = &authInterface
-	j.auth.checkRefreshToken()
+	j.CheckRefreshToken()
 }

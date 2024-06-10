@@ -33,7 +33,7 @@ type OAuthResponse struct {
 
 // Operations
 
-func (a *oauth) checkRefreshToken() error {
+func (a *oauth) getNewToken() error {
 	client := http.Client{}
 	data := url.Values{}
 

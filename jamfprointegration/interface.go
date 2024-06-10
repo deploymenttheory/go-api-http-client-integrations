@@ -18,6 +18,10 @@ type Integration struct {
 	auth                 authInterface
 }
 
+func (j *Integration) CheckRefreshToken() error {
+	return j.checkRefreshToken()
+}
+
 func (j *Integration) Domain() string {
 	return j.BaseDomain
 }
