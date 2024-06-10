@@ -11,13 +11,12 @@ import (
 )
 
 type basicAuth struct {
-	username               string
-	password               string
-	basicToken             string
-	bearerToken            string
-	bearerTokeneExpiryTime string
-	logger                 logger.Logger
-	tokenExpiry            time.Time
+	username              string
+	password              string
+	basicToken            string
+	bearerToken           string
+	bearerTokenExpiryTime time.Time
+	logger                logger.Logger
 }
 
 type basicAuthResponse struct {
@@ -25,7 +24,9 @@ type basicAuthResponse struct {
 	expiry time.Time
 }
 
-func (a *basicAuth) getBasicToken() error {
+// Operations
+
+func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
 	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)
@@ -51,12 +52,26 @@ func (a *basicAuth) getBasicToken() error {
 	}
 
 	a.bearerToken = tokenResp.Token
-	a.tokenExpiry = tokenResp.Expires
-	tokenDuration := time.Until(a.tokenExpiry)
+	a.bearerTokenExpiryTime = tokenResp.Expires
+	tokenDuration := time.Until(a.bearerTokenExpiryTime)
 
-	a.logger.Info("Token obtained successfully", zap.Time("Expiry", a.tokenExpiry), zap.Duration("Duration", tokenDuration))
+	a.logger.Info("Token obtained successfully", zap.Time("Expiry", a.bearerTokenExpiryTime), zap.Duration("Duration", tokenDuration))
 
 	return nil
+}
+
+func (a *basicAuth) tokenString() string {
+	return a.bearerToken
+}
+
+// Utils
+
+func (a *basicAuth) tokenExpired() bool {
+	return false
+}
+
+func (a *basicAuth) tokenInBuffer() bool {
+	return false
 }
 
 func (a *basicAuth) tokenEmpty() bool {

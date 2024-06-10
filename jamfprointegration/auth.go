@@ -8,12 +8,15 @@ const (
 	tokenEmptyWarnString = "token empty before processing - disregard if first run"
 )
 
-type auth interface {
+type authInterface interface {
+	// Token Operations
+	getNewToken() (string, error)
+	tokenString() string
+
+	// Token Utils
 	tokenExpired() bool
 	tokenInBuffer() bool
 	tokenEmpty() bool
-	getNewToken() (string, error)
-	tokenString() string
 }
 
 func (j *Integration) token() (string, error) {

@@ -14,14 +14,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
-type OAuthResponse struct {
-	AccessToken  string `json:"access_token"`
-	ExpiresIn    int64  `json:"expires_in"`
-	TokenType    string `json:"token_type"`
-	RefreshToken string `json:"refresh_token,omitempty"`
-}
-
 type oauth struct {
 	baseDomain   string
 	clientId     string
@@ -31,7 +23,17 @@ type oauth struct {
 	token        string
 }
 
-func (a *oauth) getOauthToken(tokenHome *string, expiryHome *time.Time) error {
+// OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
+type OAuthResponse struct {
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int64  `json:"expires_in"`
+	TokenType    string `json:"token_type"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+}
+
+// Operations
+
+func (a *oauth) getNewToken(tokenHome *string, expiryHome *time.Time) error {
 	client := http.Client{}
 	data := url.Values{}
 
@@ -81,6 +83,12 @@ func (a *oauth) getOauthToken(tokenHome *string, expiryHome *time.Time) error {
 	return nil
 }
 
+func (a *oauth) tokenString() string {
+	return a.token
+}
+
+// Utils
+
 func (a *oauth) tokenInBuffer(bufferPeriod time.Duration) bool {
 	if time.Until(a.expiryTime) >= bufferPeriod {
 		return false
@@ -93,4 +101,8 @@ func (a *oauth) tokenExpired() bool {
 		return true
 	}
 	return false
+}
+
+func (a *oauth) tokenEmpty() bool {
+	return a.token == ""
 }

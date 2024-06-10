@@ -25,7 +25,7 @@ type Integration struct {
 	bearerTokenString    string
 	tokenExpiry          time.Time
 	clientConfig         httpclient.ClientConfig
-	auth                 auth
+	auth                 authInterface
 }
 
 type TokenResponse struct {
@@ -38,7 +38,7 @@ func (j *Integration) Domain() string {
 }
 
 func (j *Integration) PrepRequestParams(req *http.Request, tokenRefreshBufferPeriod time.Duration) error {
-	err := j.prepRequest(req, tokenRefreshBufferPeriod)
+	err := j.prepRequest(req)
 	return err
 }
 
