@@ -2,8 +2,6 @@ package jamfprointegration
 
 import (
 	"errors"
-
-	"go.uber.org/zap"
 )
 
 const (
@@ -34,13 +32,10 @@ func (j *Integration) checkRefreshToken() error {
 		err = j.auth.getNewToken()
 
 		if err != nil {
-			j.Logger.Warn("WARNING", zap.Error(err))
 			return err
 		}
-		j.Logger.Warn("VARS: ", zap.Bool("expired:", j.auth.tokenExpired()), zap.Bool("buffer: ", j.auth.tokenInBuffer()))
 		// Protects against bad token lifetime/buffer combinations (infinite loops)
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
-			j.Logger.Warn("INSIDE CATCH")
 			return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 		}
 
