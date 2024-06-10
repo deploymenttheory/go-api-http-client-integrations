@@ -22,6 +22,8 @@ type authInterface interface {
 func (j *Integration) checkRefreshToken() error {
 	var err error
 
+	j.Logger.Debug("Checking and refreshing token")
+
 	if j.auth.tokenEmpty() {
 		j.Logger.Warn(tokenEmptyWarnString)
 	}
