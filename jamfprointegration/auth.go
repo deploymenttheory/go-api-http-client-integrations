@@ -32,15 +32,16 @@ func (j *Integration) checkRefreshToken() error {
 		j.Logger.Warn(tokenEmptyWarnString)
 	}
 
-	j.Logger.Debug("Bools:", zap.Bool("expired", j.auth.tokenExpired()), zap.Bool("in buffer", j.auth.tokenInBuffer()), zap.Bool("empty", j.auth.tokenEmpty()))
-	j.Logger.Debug("Vars", zap.String("exp time", j.auth.getExpiryTime().String()))
-
 	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
 		err = j.auth.getNewToken()
 
 		if err != nil {
 			return err
 		}
+
+		j.Logger.Debug("Bools:", zap.Bool("expired", j.auth.tokenExpired()), zap.Bool("in buffer", j.auth.tokenInBuffer()), zap.Bool("empty", j.auth.tokenEmpty()))
+		j.Logger.Debug("Vars", zap.String("exp time", j.auth.getExpiryTime().String()))
+
 		// Protects against bad token lifetime/buffer combinations (infinite loops)
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
 			return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
