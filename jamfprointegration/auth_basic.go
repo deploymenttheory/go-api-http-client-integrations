@@ -17,6 +17,7 @@ type basicAuth struct {
 	basicToken            string
 	bearerToken           string
 	bearerTokenExpiryTime time.Time
+	bufferPeriod          time.Duration
 	logger                logger.Logger
 }
 

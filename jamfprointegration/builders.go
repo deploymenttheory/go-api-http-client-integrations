@@ -1,8 +1,12 @@
 package jamfprointegration
 
-import "github.com/deploymenttheory/go-api-http-client/logger"
+import (
+	"time"
 
-func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, clientId string, clientSecret string) Integration {
+	"github.com/deploymenttheory/go-api-http-client/logger"
+)
+
+func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) Integration {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		InstanceName:         jamfInstanceName,
@@ -10,12 +14,12 @@ func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, l
 		AuthMethodDescriptor: "oauth2",
 	}
 
-	integration.BuildOAuth(clientId, clientSecret)
+	integration.BuildOAuth(clientId, clientSecret, bufferPeriod)
 
 	return integration
 }
 
-func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, username string, password string) Integration {
+func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) Integration {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		InstanceName:         jamfInstanceName,
@@ -23,16 +27,17 @@ func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName strin
 		AuthMethodDescriptor: "basic",
 	}
 
-	integration.BuildBasicAuth(username, password)
+	integration.BuildBasicAuth(username, password, bufferPeriod)
 
 	return integration
 }
 
-func (j *Integration) BuildOAuth(clientId string, clientSecret string) {
+func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration) {
 	authInterface := oauth{
 		// args
 		clientId:     clientId,
 		clientSecret: clientSecret,
+		bufferPeriod: bufferPeriod,
 
 		// integration
 		baseDomain: j.BaseDomain,
@@ -44,10 +49,11 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string) {
 
 }
 
-func (j *Integration) BuildBasicAuth(username string, password string) {
+func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration) {
 	authInterface := basicAuth{
-		username: username,
-		password: password,
+		username:     username,
+		password:     password,
+		bufferPeriod: bufferPeriod,
 
 		logger:     j.Logger,
 		baseDomain: j.BaseDomain,
