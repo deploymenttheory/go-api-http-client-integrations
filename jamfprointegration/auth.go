@@ -40,6 +40,7 @@ func (j *Integration) checkRefreshToken() error {
 		j.Logger.Warn("VARS: ", zap.Bool("expired:", j.auth.tokenExpired()), zap.Bool("buffer: ", j.auth.tokenInBuffer()))
 		// Protects against bad token lifetime/buffer combinations (infinite loops)
 		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
+			j.Logger.Warn("INSIDE CATCH")
 			return errors.New("token lifetime is shorter than buffer period. please adjust parameters.")
 		}
 
