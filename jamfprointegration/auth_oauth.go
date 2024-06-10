@@ -86,6 +86,10 @@ func (a *oauth) getTokenString() string {
 	return a.token
 }
 
+func (a *oauth) getExpiryTime() time.Time {
+	return a.expiryTime
+}
+
 // Utils
 
 func (a *oauth) tokenExpired() bool {

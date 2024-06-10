@@ -10,7 +10,7 @@ import (
 
 // JamfAPIHandler implements the APIHandler interface for the Jamf Pro API.
 type Integration struct {
-	BaseDomain           string // OverrideBaseDomain is used to override the base domain for URL construction.
+	BaseDomain           string
 	InstanceName         string // InstanceName is the name of the Jamf instance.
 	AuthMethodDescriptor string
 	Logger               logger.Logger

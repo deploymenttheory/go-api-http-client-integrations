@@ -69,6 +69,10 @@ func (a *basicAuth) getTokenString() string {
 	return a.bearerToken
 }
 
+func (a *basicAuth) getExpiryTime() time.Time {
+	return time.Time{}
+}
+
 // Utils
 
 func (a *basicAuth) tokenExpired() bool {
