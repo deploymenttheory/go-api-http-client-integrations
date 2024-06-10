@@ -61,8 +61,6 @@ func (a *basicAuth) getNewToken() error {
 	a.bearerTokenExpiryTime = tokenResp.Expires
 	tokenDuration := time.Until(a.bearerTokenExpiryTime)
 
-	a.logger.Debug("expiry time", zap.String("expiry time", a.bearerTokenExpiryTime.String()))
-
 	a.logger.Info("Token obtained successfully", zap.Time("Expiry", a.bearerTokenExpiryTime), zap.Duration("Duration", tokenDuration))
 
 	return nil
