@@ -34,7 +34,8 @@ type basicAuthResponse struct {
 func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
-	req, err := http.NewRequest("POST", bearerTokenEndpoint, nil)
+	completeBearerEndpoint := a.baseDomain + bearerTokenEndpoint
+	req, err := http.NewRequest("POST", completeBearerEndpoint, nil)
 	if err != nil {
 		return err
 	}
@@ -70,16 +71,20 @@ func (a *basicAuth) getTokenString() string {
 }
 
 func (a *basicAuth) getExpiryTime() time.Time {
-	return time.Time{}
+	return a.bearerTokenExpiryTime
 }
 
 // Utils
 
 func (a *basicAuth) tokenExpired() bool {
-	return false
+	return a.bearerTokenExpiryTime.Before(time.Now())
 }
 
 func (a *basicAuth) tokenInBuffer() bool {
+	if time.Until(a.bearerTokenExpiryTime) <= a.bufferPeriod {
+		return true
+	}
+
 	return false
 }
 
