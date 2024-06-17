@@ -46,6 +46,7 @@ func (j *Integration) MarshalMultipartRequest(fields map[string]string, files ma
 	return j.marshalMultipartRequest(fields, files)
 }
 
-func (j *Integration) GetSessionCookies() (*[]http.Cookie, error) {
-	return nil, nil
+func (j *Integration) GetSessionCookies() ([]*http.Cookie, error) {
+	domain := j.Domain()
+	return j.getSessionCookies(domain)
 }

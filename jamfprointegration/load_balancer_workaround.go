@@ -6,6 +6,16 @@ import (
 	"slices"
 )
 
+func (j *Integration) getSessionCookies(urlString string) ([]*http.Cookie, error) {
+	var returnList []*http.Cookie
+	balancerValue, err := j.GetLoadBalancer(urlString)
+	if err != nil {
+		return nil, fmt.Errorf("error getting load balancer: %v", err)
+	}
+	returnList = append(returnList, &http.Cookie{Name: LoadBalancerTargetCookie, Value: balancerValue})
+	return returnList, nil
+}
+
 func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	allBalancers, err := j.getAllLoadBalancers(urlString)
 	if err != nil {
