@@ -45,3 +45,7 @@ func (j *Integration) PrepRequestBody(body interface{}, method string, endpoint 
 func (j *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return j.marshalMultipartRequest(fields, files)
 }
+
+func (j *Integration) GetSessionCookies() (*[]http.Cookie, error) {
+	return nil, nil
+}
