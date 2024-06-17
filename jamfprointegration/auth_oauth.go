@@ -56,6 +56,11 @@ func (a *oauth) getNewToken() error {
 	if err != nil {
 		return err
 	}
+
+	if resp.StatusCode < 200 && resp.StatusCode > 299 {
+		return fmt.Errorf("bad request: %v", resp)
+	}
+
 	defer resp.Body.Close()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
