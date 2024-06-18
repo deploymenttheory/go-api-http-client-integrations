@@ -42,7 +42,7 @@ func chooseMostAlphabeticalString(strings []string) string {
 }
 
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
-	var cookiesList []*http.Cookie
+
 	var outList []string
 	var err error
 	var req *http.Request
@@ -67,9 +67,8 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 		respCookies := resp.Cookies()
 
-		for i, v := range respCookies {
+		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
-				cookiesList = append(cookiesList, respCookies[i])
 				outList = append(outList, v.Value)
 			}
 		}
