@@ -8,8 +8,7 @@ import (
 
 func BuildIntegrationWithOAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
 	integration := Integration{
-		BaseDomain: jamfBaseDomain,
-
+		BaseDomain:           jamfBaseDomain,
 		Logger:               logger,
 		AuthMethodDescriptor: "oauth2",
 	}
@@ -22,8 +21,7 @@ func BuildIntegrationWithOAuth(jamfBaseDomain string, logger logger.Logger, buff
 
 func BuildIntegrationWithBasicAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
 	integration := Integration{
-		BaseDomain: jamfBaseDomain,
-
+		BaseDomain:           jamfBaseDomain,
 		Logger:               logger,
 		AuthMethodDescriptor: "basic",
 	}
