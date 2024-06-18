@@ -6,10 +6,10 @@ import (
 	"github.com/deploymenttheory/go-api-http-client/logger"
 )
 
-func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
+func BuildIntegrationWithOAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
 	integration := Integration{
-		BaseDomain:           jamfBaseDomain,
-		InstanceName:         jamfInstanceName,
+		BaseDomain: jamfBaseDomain,
+
 		Logger:               logger,
 		AuthMethodDescriptor: "oauth2",
 	}
@@ -20,10 +20,10 @@ func BuildIntegrationWithOAuth(jamfBaseDomain string, jamfInstanceName string, l
 	return &integration, err
 }
 
-func BuildIntegrationWithBasicAuth(jamfBaseDomain string, jamfInstanceName string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
+func BuildIntegrationWithBasicAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
 	integration := Integration{
-		BaseDomain:           jamfBaseDomain,
-		InstanceName:         jamfInstanceName,
+		BaseDomain: jamfBaseDomain,
+
 		Logger:               logger,
 		AuthMethodDescriptor: "basic",
 	}
