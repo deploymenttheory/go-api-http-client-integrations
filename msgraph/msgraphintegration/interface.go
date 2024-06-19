@@ -20,7 +20,7 @@ type Integration struct {
 
 // TODO migrate strings
 func (m *Integration) Domain() string {
-	return m.BaseDomain
+	return m.TenantName
 }
 
 // TODO migrate strings
