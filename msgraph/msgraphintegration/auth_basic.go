@@ -1,4 +1,4 @@
-package jamfprointegration
+package msgraphintegration
 
 import (
 	"encoding/json"

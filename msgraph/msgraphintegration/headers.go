@@ -1,29 +1,34 @@
-package jamfprointegration
+// msgraph/msgraphintegration/headers.go
+package msgraphintegration
 
 import (
 	"strings"
 
+	"github.com/deploymenttheory/go-api-http-client/logger"
 	"go.uber.org/zap"
 )
 
-// GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
+// getContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
 // It attempts to find a content type that matches the endpoint prefix in the global configMap.
 // If a match is found and the content type is defined (not nil), it returns the specified content type.
-// If the content type is nil or no match is found in configMap, it falls back to default behaviors:
-// - For url endpoints starting with "/JSSResource", it defaults to "application/xml" for the Classic API.
-// - For url endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
-func (j *Integration) getContentTypeHeader(endpoint string) string {
-	if strings.Contains(endpoint, "/JSSResource") {
-		j.Logger.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
-		return "application/xml"
-	} else if strings.Contains(endpoint, "/api") {
-		j.Logger.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
-		return "application/json"
+func (m *Integration) getContentTypeHeader(endpoint string, log logger.Logger) string {
+	// Dynamic lookup from configuration should be the first priority
+	for key, config := range configMap {
+		if strings.HasPrefix(endpoint, key) {
+			if config.ContentType != nil {
+				m.Logger.Debug("Content-Type for endpoint found in configMap", zap.String("endpoint", endpoint), zap.String("content_type", *config.ContentType))
+				return *config.ContentType
+			}
+			m.Logger.Debug("Content-Type for endpoint is nil in configMap, handling as special case", zap.String("endpoint", endpoint))
+			// If a nil ContentType is an expected case, do not set Content-Type header.
+			return "" // Return empty to indicate no Content-Type should be set.
+		}
 	}
 
-	j.Logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
+	// Fallback to JSON if no other match is found.
+	m.Logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
 	return "application/json"
 }
 
@@ -34,7 +39,7 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 // the server is informed of the client's versatile content handling capabilities while
 // indicating a preference for XML. The specified MIME types cover common content formats like
 // images, JSON, XML, HTML, plain text, and certificates, with a fallback option for all other types.
-func (j *Integration) getAcceptHeader() string {
+func (m *Integration) getAcceptHeader() string {
 	weightedAcceptHeader := "application/x-x509-ca-cert;q=0.95," +
 		"application/pkix-cert;q=0.94," +
 		"application/pem-certificate-chain;q=0.93," +
@@ -53,7 +58,7 @@ func (j *Integration) getAcceptHeader() string {
 	return weightedAcceptHeader
 }
 
-// getUserAgentHeader returns the User-Agent header string for the Jamf Pro API.
-func (j *Integration) getUserAgentHeader() string {
-	return "go-api-http-client-jamfpro-integration"
+// getUserAgentHeader returns the User-Agent header string for the Microsoft Graph API.
+func (m *Integration) getUserAgentHeader() string {
+	return "go-api-http-client-msgraph-integration"
 }

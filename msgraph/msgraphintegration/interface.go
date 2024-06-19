@@ -13,6 +13,9 @@ type Integration struct {
 	AuthMethodDescriptor string
 	Logger               logger.Logger
 	auth                 authInterface
+
+	TenantID   string // TenantID used for constructing the authentication endpoint.
+	TenantName string // TenantName used for constructing the authentication endpoint.
 }
 
 // Info

@@ -1,4 +1,4 @@
-package jamfprointegration
+package msgraphintegration
 
 import (
 	"errors"
@@ -9,6 +9,7 @@ const (
 	tokenEmptyWarnString = "token empty before processing - disregard if first run"
 )
 
+// authInterface defines the methods required to satify the authentication interface.
 type authInterface interface {
 	// Token Operations
 	getNewToken() error
@@ -35,22 +36,22 @@ type authInterface interface {
 //   - Attempts to obtain a new token if the current token is invalid.
 //   - Validates the new token's lifetime against the buffer period to prevent bad token lifetime/buffer combinations.
 //   - Returns an error if the token refresh fails or if the new token's lifetime is shorter than the buffer period.
-func (j *Integration) checkRefreshToken() error {
+func (m *Integration) checkRefreshToken() error {
 	var err error
 
-	if j.auth.tokenEmpty() {
-		j.Logger.Warn(tokenEmptyWarnString)
+	if m.auth.tokenEmpty() {
+		m.Logger.Warn(tokenEmptyWarnString)
 	}
 
-	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
-		err = j.auth.getNewToken()
+	if m.auth.tokenExpired() || m.auth.tokenInBuffer() || m.auth.tokenEmpty() {
+		err = m.auth.getNewToken()
 
 		if err != nil {
 			return err
 		}
 
 		// Protects against bad token lifetime/buffer combinations (infinite loops)
-		if j.auth.tokenExpired() || j.auth.tokenInBuffer() {
+		if m.auth.tokenExpired() || m.auth.tokenInBuffer() {
 			return errors.New("token lifetime is shorter than buffer period. please adjust parameters")
 		}
 
