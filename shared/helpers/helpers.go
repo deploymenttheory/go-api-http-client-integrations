@@ -1,4 +1,4 @@
-package jamfprointegration
+package helpers
 
 import (
 	"fmt"

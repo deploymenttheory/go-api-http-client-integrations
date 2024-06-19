@@ -1,4 +1,4 @@
-// jamfpro_api_url.go
+// jamfpro/jamfprointegration/urls.go
 package jamfprointegration
 
 // SetBaseDomain returns the appropriate base domain for URL construction.
