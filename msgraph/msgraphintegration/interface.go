@@ -50,9 +50,3 @@ func (m *Integration) PrepRequestBody(body interface{}, method string, endpoint 
 func (m *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return m.marshalMultipartRequest(fields, files)
 }
-
-// TODO migrate strings
-func (m *Integration) GetSessionCookies() ([]*http.Cookie, error) {
-	domain := m.Domain()
-	return m.getSessionCookies(domain)
-}
