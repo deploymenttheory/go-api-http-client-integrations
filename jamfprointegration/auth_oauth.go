@@ -36,6 +36,7 @@ type OAuthResponse struct {
 
 // Operations
 
+// TODO migrate strings
 func (a *oauth) getNewToken() error {
 	client := http.Client{}
 	data := url.Values{}
@@ -87,16 +88,19 @@ func (a *oauth) getNewToken() error {
 	return nil
 }
 
+// TODO migrate strings
 func (a *oauth) getTokenString() string {
 	return a.token
 }
 
+// TODO migrate strings
 func (a *oauth) getExpiryTime() time.Time {
 	return a.expiryTime
 }
 
 // Utils
 
+// TODO migrate strings
 func (a *oauth) tokenExpired() bool {
 	if a.expiryTime.Before(time.Now()) {
 		return true
@@ -104,6 +108,7 @@ func (a *oauth) tokenExpired() bool {
 	return false
 }
 
+// TODO migrate strings
 func (a *oauth) tokenInBuffer() bool {
 	if time.Until(a.expiryTime) <= a.bufferPeriod {
 		return true
@@ -111,6 +116,7 @@ func (a *oauth) tokenInBuffer() bool {
 	return false
 }
 
+// TODO migrate strings
 func (a *oauth) tokenEmpty() bool {
 	return a.token == ""
 }

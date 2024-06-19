@@ -31,6 +31,8 @@ type basicAuthResponse struct {
 
 // Operations
 
+// TODO comment
+// TODO migrate strings
 func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
@@ -39,12 +41,14 @@ func (a *basicAuth) getNewToken() error {
 	if err != nil {
 		return err
 	}
+
 	req.SetBasicAuth(a.username, a.password)
 
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
@@ -66,20 +70,24 @@ func (a *basicAuth) getNewToken() error {
 	return nil
 }
 
+// TODO comment
 func (a *basicAuth) getTokenString() string {
 	return a.bearerToken
 }
 
+// TODO comment
 func (a *basicAuth) getExpiryTime() time.Time {
 	return a.bearerTokenExpiryTime
 }
 
 // Utils
 
+// TODO comment
 func (a *basicAuth) tokenExpired() bool {
 	return a.bearerTokenExpiryTime.Before(time.Now())
 }
 
+// TODO comment
 func (a *basicAuth) tokenInBuffer() bool {
 	if time.Until(a.bearerTokenExpiryTime) <= a.bufferPeriod {
 		return true
@@ -88,6 +96,7 @@ func (a *basicAuth) tokenInBuffer() bool {
 	return false
 }
 
+// TODO comment
 func (a *basicAuth) tokenEmpty() bool {
 	if a.bearerToken == "" {
 		return true
