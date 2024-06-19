@@ -1,8 +1,7 @@
 // jamfpro/jamfprointegration/urls.go
 package jamfprointegration
 
-// SetBaseDomain returns the appropriate base domain for URL construction.
-// It uses j.OverrideBaseDomain if set, otherwise falls back to DefaultBaseDomain.
+// GetBaseDomain returns the base domain for the Jamf Pro integration.
 func (j *Integration) GetBaseDomain() string {
 	return j.BaseDomain
 }

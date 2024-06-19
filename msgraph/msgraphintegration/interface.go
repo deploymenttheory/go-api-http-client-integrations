@@ -7,15 +7,13 @@ import (
 	"github.com/deploymenttheory/go-api-http-client/logger"
 )
 
-// MSGraphAPIHandler implements the APIHandler interface for the Microsoft Graph API.
+// Integration implements the APIHandler interface for the Microsoft Graph API.
 type Integration struct {
-	BaseDomain           string
+	TenantID             string // TenantID used for constructing the authentication endpoint.
+	TenantName           string // TenantName used for constructing the authentication endpoint.
 	AuthMethodDescriptor string
 	Logger               logger.Logger
 	auth                 authInterface
-
-	TenantID   string // TenantID used for constructing the authentication endpoint.
-	TenantName string // TenantName used for constructing the authentication endpoint.
 }
 
 // Info

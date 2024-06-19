@@ -7,4 +7,5 @@ const (
 	bearerTokenEndpoint     string = "graph.microsoft.com"
 	invalidateTokenEndpoint string = "graph.microsoft.com"
 	oAuthTokenScope         string = "https://graph.microsoft.com/.default"
+	baseAuthURL             string = "https://login.microsoftonline.com"
 )

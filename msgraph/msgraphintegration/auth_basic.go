@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client/logger"
@@ -15,6 +17,7 @@ type basicAuth struct {
 	baseDomain   string
 	username     string
 	password     string
+	tenantID     string
 	bufferPeriod time.Duration
 	logger       logger.Logger
 
@@ -31,33 +34,41 @@ type basicAuthResponse struct {
 
 // Operations
 
-// getNewToken obtains a new bearer token from the authentication server.
-// This function constructs a new HTTP request to the bearer token endpoint using the basic authentication credentials,
+// getNewToken obtains a new bearer token from the Microsoft Graph API authentication server.
+// This function constructs a new HTTP request to the OAuth2.0 token endpoint using the basic authentication credentials,
 // sends the request, and updates the basicAuth instance with the new bearer token and its expiry time.
 //
 // Returns:
 //   - error: Any error encountered during the request, response handling, or JSON decoding. Returns nil if no errors occur.
 //
 // Functionality:
-//   - Constructs the complete bearer token endpoint URL.
-//   - Creates a new HTTP POST request and sets the basic authentication headers.
+//   - Constructs the complete OAuth2.0 token endpoint URL using the tenantID.
+//   - Logs the constructed authentication URL.
+//   - Creates a new HTTP POST request and sets the form data with grant type, scope, username, and password for the request body.
 //   - Sends the request using an HTTP client and checks the response status.
 //   - Decodes the JSON response to obtain the bearer token and its expiry time.
 //   - Updates the basicAuth instance with the new bearer token and its expiry time.
 //   - Logs the successful token retrieval with the expiry time and duration.
-//
-// TODO migrate strings
 func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
-	completeBearerEndpoint := a.baseDomain + bearerTokenEndpoint
-	req, err := http.NewRequest("POST", completeBearerEndpoint, nil)
+	constructedBearerAuthEndpoint := fmt.Sprintf("%s/%s%s", baseAuthURL, a.tenantID, oAuthTokenEndpoint)
+
+	a.logger.Info("constructed Microsoft Graph API authentication URL", zap.String("URL", constructedBearerAuthEndpoint))
+
+	formData := url.Values{
+		"grant_type": {"password"},
+		"scope":      {oAuthTokenScope},
+		"username":   {a.username},
+		"password":   {a.password},
+	}
+
+	req, err := http.NewRequest("POST", constructedBearerAuthEndpoint, strings.NewReader(formData.Encode()))
 	if err != nil {
 		return err
 	}
 
-	req.SetBasicAuth(a.username, a.password)
-
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
