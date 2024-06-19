@@ -4,7 +4,6 @@ package msgraphintegration
 import (
 	"strings"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
 	"go.uber.org/zap"
 )
 
@@ -13,7 +12,7 @@ import (
 // If a match is found and the content type is defined (not nil), it returns the specified content type.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
-func (m *Integration) getContentTypeHeader(endpoint string, log logger.Logger) string {
+func (m *Integration) getContentTypeHeader(endpoint string) string {
 	// Dynamic lookup from configuration should be the first priority
 	for key, config := range configMap {
 		if strings.HasPrefix(endpoint, key) {
