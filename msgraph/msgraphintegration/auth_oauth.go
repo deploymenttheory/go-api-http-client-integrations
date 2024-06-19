@@ -15,7 +15,6 @@ import (
 
 type oauth struct {
 	// Set
-	baseDomain   string
 	clientId     string
 	clientSecret string
 	tenantID     string

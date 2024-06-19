@@ -1,7 +1,7 @@
 // apiintegrations/msgraph/urls.go
 package msgraphintegration
 
-// GetBaseDomain returns the base domain for the Jamf Pro integration.
-func (m *Integration) GetBaseDomain() string {
-	return m.BaseDomain
+// GetTenantName returns the tenant name for the Microsoft Graph integration.
+func (m *Integration) GetTenantName() string {
+	return m.TenantName
 }
