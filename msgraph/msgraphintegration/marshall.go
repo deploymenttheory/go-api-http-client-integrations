@@ -45,7 +45,9 @@ func (m *Integration) marshalRequest(body interface{}, method string, endpoint s
 
 	// Log the JSON request body for POST, PUT, or PATCH methods
 	if method == "POST" || method == "PUT" || method == "PATCH" {
-		m.Logger.Debug("JSON Request Body", zap.String("Body", string(data)))
+		m.Logger.Debug("JSON Request Body", zap.String("Body", string(data)), zap.String("Endpoint", endpoint))
+	} else {
+		m.Logger.Debug("Request Endpoint", zap.String("Endpoint", endpoint))
 	}
 
 	return data, nil
