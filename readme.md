@@ -16,7 +16,7 @@ An API integration in this library typically includes the following components:
    - **Header Exceptions**: Handling specific headers for certain requests.
    - **Request Body Marshalling**: Encoding the request body as JSON, XML or multipart form data.
 
-3. **Building Integrations**:
+3. **Integration Builders**:
     - **Initialization Functions**: Methods to initialize the integration with specific authentication methods, such as OAuth2.0 and Basic Authentication.
     - **Configuration Parameters**: Contextual parameters necessary for setting up the integration. These parameters vary based on the API and the authentication method being used. Examples include:
     - **Microsoft MS Graph**:
