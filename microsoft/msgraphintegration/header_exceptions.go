@@ -28,10 +28,7 @@ var configMap ConfigMap
 //go:embed msgraph_api_exceptions_configuration.json
 var graph_api_exceptions_configuration []byte
 
-// init is invoked automatically on package initialization and is responsible for
-// setting up the default state of the package by loading the api exceptions configuration.
 func init() {
-	// Load the default configuration from an embedded resource.
 	err := loadAPIExceptionsConfiguration()
 	if err != nil {
 		log.Fatalf("Error loading Microsoft Graph API exceptions configuration: %s", err)
@@ -41,6 +38,5 @@ func init() {
 // loadAPIExceptionsConfiguration reads and unmarshals the graph_api_exceptions_configuration JSON data from an embedded file
 // into the configMap variable, which holds the exceptions configuration for endpoint-specific headers.
 func loadAPIExceptionsConfiguration() error {
-	// Unmarshal the embedded default configuration into the global configMap.
 	return json.Unmarshal(graph_api_exceptions_configuration, &configMap)
 }
