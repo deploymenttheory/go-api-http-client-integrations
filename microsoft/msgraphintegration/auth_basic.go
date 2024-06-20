@@ -1,4 +1,4 @@
-// msgraph/msgraphintegration/auth_basic.go
+// microsoft/msgraphintegration/auth_basic.go
 package msgraphintegration
 
 import (
