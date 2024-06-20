@@ -20,7 +20,7 @@ type Integration struct {
 
 // Return the FQDN for Microsoft Graph
 func (m *Integration) GetFQDN() string {
-	return m.getFQDN
+	return m.getFQDN()
 }
 
 // TODO migrate strings
