@@ -19,7 +19,7 @@ type Integration struct {
 // Info
 
 // TODO migrate strings
-func (m *Integration) Domain() string {
+func (m *Integration) GetFQDN() string {
 	return m.TenantName
 }
 
