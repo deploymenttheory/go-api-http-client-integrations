@@ -1,5 +1,3 @@
-// jamfpro_api_handler.go
-
 package jamfprointegration
 
 import (

@@ -1,4 +1,3 @@
-// jamfpro/jamfprointegration/marshall.go
 package jamfprointegration
 
 import (
