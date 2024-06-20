@@ -1,4 +1,4 @@
-// apiintegrations/microsoft/.go
+// microsoft/msgraphintegration/marshall.go
 package msgraphintegration
 
 import (

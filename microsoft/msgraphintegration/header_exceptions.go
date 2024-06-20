@@ -1,4 +1,4 @@
-// msgraph/msgraphintegration/header_exceptions.go
+// microsoft/msgraphintegration/header_exceptions.go
 package msgraphintegration
 
 import (

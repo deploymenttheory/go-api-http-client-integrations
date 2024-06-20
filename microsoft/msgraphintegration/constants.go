@@ -1,4 +1,4 @@
-// msgraph/msgraphintegration/constants.go
+// microsoft/msgraphintegration/constants.go
 package msgraphintegration
 
 // Endpoint constants represent the URL suffixes used for Jamf API token interactions.

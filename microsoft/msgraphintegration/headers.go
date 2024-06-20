@@ -1,4 +1,4 @@
-// msgraph/msgraphintegration/headers.go
+// microsoft/msgraphintegration/headers.go
 package msgraphintegration
 
 import (
