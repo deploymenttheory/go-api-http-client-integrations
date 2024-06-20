@@ -19,7 +19,7 @@ type Integration struct {
 // Info
 
 // TODO migrate strings
-func (j *Integration) Domain() string {
+func (j *Integration) GetFQDN() string {
 	return j.BaseDomain
 }
 
@@ -53,6 +53,6 @@ func (j *Integration) MarshalMultipartRequest(fields map[string]string, files ma
 
 // TODO migrate strings
 func (j *Integration) GetSessionCookies() ([]*http.Cookie, error) {
-	domain := j.Domain()
+	domain := j.GetFQDN()
 	return j.getSessionCookies(domain)
 }
