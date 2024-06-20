@@ -1,6 +1,5 @@
 module github.com/deploymenttheory/go-api-http-client-integrations
 
-
 go 1.22.4
 
 require (
