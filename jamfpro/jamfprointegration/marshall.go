@@ -1,4 +1,4 @@
-// jamfpro_api_request.go
+// jamfpro/jamfprointegration/marshall.go
 package jamfprointegration
 
 import (
@@ -11,10 +11,30 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/deploymenttheory/go-api-http-client-integrations/shared/helpers"
 	"go.uber.org/zap"
 )
 
-// MarshalRequest encodes the request body according to the endpoint for the API.
+// MarshalRequest encodes the request body according to the endpoint for the Jamf Pro API.
+// This function marshals the request body as JSON or XML based on the endpoint string.
+// It takes an interface{} type body, an HTTP method, and an endpoint as input, and returns the
+// marshaled byte slice along with any error encountered during marshaling.
+//
+// Parameters:
+//   - body: The request body to be marshaled, of type interface{}.
+//   - method: The HTTP method being used for the request (e.g., "POST", "PUT", "PATCH").
+//   - endpoint: The API endpoint for the request.
+//
+// Returns:
+//   - []byte: The marshaled byte slice of the request body.
+//   - error: Any error encountered during the marshaling process.
+//
+// Functionality:
+//   - Determines the format (JSON or XML) based on the endpoint string.
+//   - Marshals the body as JSON if the endpoint contains "/api" or as XML if it contains "/JSSResource".
+//   - Logs the marshaled request body for POST, PUT, and PATCH methods using the integrated logger.
+//   - Logs an error if marshaling fails and returns the error.
+//   - Returns an error if the format is invalid.
 func (j *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
@@ -74,7 +94,7 @@ func (j *Integration) marshalMultipartRequest(fields map[string]string, files ma
 	}
 
 	for formField, filePath := range files {
-		file, err := SafeOpenFile(filePath)
+		file, err := helpers.SafeOpenFile(filePath)
 		if err != nil {
 			j.Logger.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
 			return nil, "", err

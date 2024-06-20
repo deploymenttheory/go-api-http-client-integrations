@@ -1,4 +1,5 @@
-package jamfprointegration
+// apiintegrations/msgraph/request.go
+package msgraphintegration
 
 import (
 	"fmt"
@@ -21,17 +22,17 @@ import (
 //   - Adds a "User-Agent" header based on the Integration's getUserAgentHeader method.
 //   - Checks and refreshes the token if necessary using the Integration's checkRefreshToken method.
 //   - Adds an "Authorization" header with a Bearer token obtained from the Integration's auth.getTokenString method.
-func (j *Integration) prepRequest(req *http.Request) error {
-	req.Header.Add("Accept", j.getAcceptHeader())
-	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
-	req.Header.Add("User-Agent", j.getUserAgentHeader())
+func (m *Integration) prepRequest(req *http.Request) error {
+	req.Header.Add("Accept", m.getAcceptHeader())
+	req.Header.Add("Content-Type", m.getContentTypeHeader(req.URL.String()))
+	req.Header.Add("User-Agent", m.getUserAgentHeader())
 
-	err := j.checkRefreshToken()
+	err := m.checkRefreshToken()
 	if err != nil {
 		return err
 	}
 
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", j.auth.getTokenString()))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", m.auth.getTokenString()))
 
 	return nil
 }
