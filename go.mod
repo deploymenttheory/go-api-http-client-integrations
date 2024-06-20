@@ -1,4 +1,4 @@
-module github.com/deploymenttheory/go-api-http-client-integrations/jamfpro/jamfprointegration
+module github.com/deploymenttheory/go-api-http-client-integrations
 
 go 1.22.4
 
