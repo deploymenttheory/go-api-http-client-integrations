@@ -18,9 +18,9 @@ type Integration struct {
 
 // Info
 
-// TODO migrate strings
+// Return the FQDN for Microsoft Graph
 func (m *Integration) GetFQDN() string {
-	return m.TenantName
+	return m.getFQDN
 }
 
 // TODO migrate strings

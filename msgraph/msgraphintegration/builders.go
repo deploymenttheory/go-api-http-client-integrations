@@ -12,7 +12,6 @@ import (
 // Checks the token refresh status upon creation.
 //
 // Parameters:
-//   - msGraphBaseDomain: The base domain for the Microsoft Graph API.
 //   - logger: A logger instance for logging purposes.
 //   - bufferPeriod: The buffer period before token expiry to refresh the token.
 //   - clientId: The client ID for OAuth2.0 authentication.
@@ -22,9 +21,9 @@ import (
 // Returns:
 //   - *Integration: A pointer to the constructed Integration instance.
 //   - error: Any error encountered during the token refresh check.
-func BuildIntegrationWithOAuth(msGraphBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string) (*Integration, error) {
-	integration := Integration{
-		BaseDomain:           msGraphBaseDomain,
+func BuildIntegrationWithOAuth(logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string) (*Integration, error) {
+	integration := &Integration{
+		TenantID:             tenantID,
 		Logger:               logger,
 		AuthMethodDescriptor: "oauth2",
 	}
@@ -32,7 +31,7 @@ func BuildIntegrationWithOAuth(msGraphBaseDomain string, logger logger.Logger, b
 	integration.BuildOAuth(clientId, clientSecret, bufferPeriod, tenantID)
 	err := integration.CheckRefreshToken()
 
-	return &integration, err
+	return integration, err
 }
 
 // BuildIntegrationWithBasicAuth constructs an Integration instance using Basic Authentication.
@@ -40,7 +39,6 @@ func BuildIntegrationWithOAuth(msGraphBaseDomain string, logger logger.Logger, b
 // Checks the token refresh status upon creation.
 //
 // Parameters:
-//   - msGraphBaseDomain: The base domain for the Microsoft Graph API.
 //   - logger: A logger instance for logging purposes.
 //   - bufferPeriod: The buffer period before token expiry to refresh the token.
 //   - username: The username for basic authentication.
@@ -50,9 +48,9 @@ func BuildIntegrationWithOAuth(msGraphBaseDomain string, logger logger.Logger, b
 // Returns:
 //   - *Integration: A pointer to the constructed Integration instance.
 //   - error: Any error encountered during the token refresh check.
-func BuildIntegrationWithBasicAuth(msGraphBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, username string, password string, tenantID string) (*Integration, error) {
-	integration := Integration{
-		BaseDomain:           msGraphBaseDomain,
+func BuildIntegrationWithBasicAuth(logger logger.Logger, bufferPeriod time.Duration, username string, password string, tenantID string) (*Integration, error) {
+	integration := &Integration{
+		TenantID:             tenantID,
 		Logger:               logger,
 		AuthMethodDescriptor: "basic",
 	}
@@ -60,7 +58,7 @@ func BuildIntegrationWithBasicAuth(msGraphBaseDomain string, logger logger.Logge
 	integration.BuildBasicAuth(username, password, bufferPeriod, tenantID)
 	err := integration.CheckRefreshToken()
 
-	return &integration, err
+	return integration, err
 }
 
 // BuildOAuth sets up the OAuth2.0 authentication method for the Integration instance.
@@ -70,17 +68,16 @@ func BuildIntegrationWithBasicAuth(msGraphBaseDomain string, logger logger.Logge
 //   - clientSecret: The client secret for OAuth2.0 authentication.
 //   - bufferPeriod: The buffer period before token expiry to refresh the token.
 //   - tenantID: The tenant ID for the Microsoft Graph API.
-func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration, tenantID string) {
-	authInterface := oauth{
+func (m *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration, tenantID string) {
+	authInterface := &oauth{
 		clientId:     clientId,
 		clientSecret: clientSecret,
 		bufferPeriod: bufferPeriod,
-		baseDomain:   j.BaseDomain,
-		Logger:       j.Logger,
+		Logger:       m.Logger,
 		tenantID:     tenantID,
 	}
 
-	j.auth = &authInterface
+	m.auth = authInterface
 }
 
 // BuildBasicAuth sets up the basic authentication method for the Integration instance.
@@ -91,14 +88,13 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 //   - bufferPeriod: The buffer period before token expiry to refresh the token.
 //   - tenantID: The tenant ID for the Microsoft Graph API.
 func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration, tenantID string) {
-	authInterface := basicAuth{
+	authInterface := &basicAuth{
 		username:     username,
 		password:     password,
 		bufferPeriod: bufferPeriod,
 		logger:       j.Logger,
-		baseDomain:   j.BaseDomain,
 		tenantID:     tenantID,
 	}
 
-	j.auth = &authInterface
+	j.auth = authInterface
 }
