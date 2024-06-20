@@ -23,6 +23,11 @@ func (j *Integration) GetFQDN() string {
 	return j.BaseDomain
 }
 
+// TODO this comment
+func (j *Integration) ConstructURL(endpoint string) string {
+	return j.GetFQDN() + endpoint
+}
+
 // TODO migrate strings
 func (j *Integration) GetAuthMethodDescriptor() string {
 	return j.AuthMethodDescriptor
