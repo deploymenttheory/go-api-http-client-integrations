@@ -1,6 +1,6 @@
 module github.com/deploymenttheory/go-api-http-client-integration-jamfpro
 
-go 1.22.2
+go 1.22.4
 
 toolchain go1.22.3
 
