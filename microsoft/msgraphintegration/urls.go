@@ -1,4 +1,4 @@
-// apiintegrations/msgraph/urls.go
+// microsoft/msgraphintegration/urls.go
 package msgraphintegration
 
 // GetTenantID returns the tenant ID for the Microsoft Graph integration.

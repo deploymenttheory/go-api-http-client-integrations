@@ -1,4 +1,4 @@
-// apiintegrations/msgraph/request.go
+// microsoft/msgraphintegration/request.go
 package msgraphintegration
 
 import (
