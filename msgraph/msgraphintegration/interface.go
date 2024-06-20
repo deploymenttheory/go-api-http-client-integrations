@@ -23,6 +23,11 @@ func (m *Integration) GetFQDN() string {
 	return m.getFQDN()
 }
 
+// Construct a URL for Microsoft Graph
+func (j *Integration) ConstructURL(endpoint string) string {
+	return j.GetFQDN() + endpoint
+}
+
 // TODO migrate strings
 func (m *Integration) GetAuthMethodDescriptor() string {
 	return m.AuthMethodDescriptor

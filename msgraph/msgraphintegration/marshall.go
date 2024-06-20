@@ -12,6 +12,13 @@ import (
 	"go.uber.org/zap"
 )
 
+// methodsWithBody is a set of HTTP methods that benefit from logging the request body.
+var methodsWithBody = map[string]bool{
+	"POST":  true,
+	"PUT":   true,
+	"PATCH": true,
+}
+
 // MarshalRequest encodes the request body as JSON for the Microsoft Graph API.
 // This function takes an interface{} type body, an HTTP method, and an endpoint as input,
 // and returns the marshaled JSON byte slice along with any error encountered during marshaling.
@@ -30,6 +37,8 @@ import (
 // Logging:
 //   - Logs an error if JSON marshaling fails.
 //   - Logs the JSON request body for POST, PUT, and PATCH methods.
+//
+// Set of methods that require logging the request body
 func (m *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
@@ -43,8 +52,8 @@ func (m *Integration) marshalRequest(body interface{}, method string, endpoint s
 		return nil, err
 	}
 
-	// Log the JSON request body for POST, PUT, or PATCH methods
-	if method == "POST" || method == "PUT" || method == "PATCH" {
+	// Log the JSON request body for methods that require it
+	if methodsWithBody[method] {
 		m.Logger.Debug("JSON Request Body", zap.String("Body", string(data)), zap.String("Endpoint", endpoint))
 	} else {
 		m.Logger.Debug("Request Endpoint", zap.String("Endpoint", endpoint))
