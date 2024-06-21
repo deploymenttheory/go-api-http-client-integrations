@@ -58,11 +58,9 @@ func (a *oauth) getNewToken() error {
 		return err
 	}
 
-	if resp.StatusCode < 200 && resp.StatusCode > 299 {
-		return fmt.Errorf("bad request: %v", resp)
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		return fmt.Errorf("bad request getting auth token: %v", resp)
 	}
-
-	return fmt.Errorf("ERROR CODE: %v", resp.StatusCode)
 
 	defer resp.Body.Close()
 
@@ -104,18 +102,12 @@ func (a *oauth) getExpiryTime() time.Time {
 
 // TODO migrate strings
 func (a *oauth) tokenExpired() bool {
-	if a.expiryTime.Before(time.Now()) {
-		return true
-	}
-	return false
+	return a.expiryTime.Before(time.Now())
 }
 
 // TODO migrate strings
 func (a *oauth) tokenInBuffer() bool {
-	if time.Until(a.expiryTime) <= a.bufferPeriod {
-		return true
-	}
-	return false
+	return time.Until(a.expiryTime) <= a.bufferPeriod
 }
 
 // TODO migrate strings

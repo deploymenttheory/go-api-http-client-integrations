@@ -19,7 +19,7 @@ type basicAuth struct {
 	logger       logger.Logger
 
 	// Computed
-	basicToken            string
+	// basicToken            string
 	bearerToken           string
 	bearerTokenExpiryTime time.Time
 }
@@ -119,11 +119,7 @@ func (a *basicAuth) tokenExpired() bool {
 // Returns:
 //   - bool: True if the bearer token is within the buffer period, false otherwise.
 func (a *basicAuth) tokenInBuffer() bool {
-	if time.Until(a.bearerTokenExpiryTime) <= a.bufferPeriod {
-		return true
-	}
-
-	return false
+	return time.Until(a.bearerTokenExpiryTime) <= a.bufferPeriod
 }
 
 // tokenEmpty checks if the current bearer token is empty.
@@ -132,8 +128,5 @@ func (a *basicAuth) tokenInBuffer() bool {
 // Returns:
 //   - bool: True if the bearer token is empty, false otherwise.
 func (a *basicAuth) tokenEmpty() bool {
-	if a.bearerToken == "" {
-		return true
-	}
-	return false
+	return a.bearerToken == ""
 }
