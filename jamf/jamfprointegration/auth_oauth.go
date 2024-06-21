@@ -88,29 +88,29 @@ func (a *oauth) getNewToken() error {
 	return nil
 }
 
-// TODO migrate strings
+// TODO func comment
 func (a *oauth) getTokenString() string {
 	return a.token
 }
 
-// TODO migrate strings
+// TODO func comment
 func (a *oauth) getExpiryTime() time.Time {
 	return a.expiryTime
 }
 
 // Utils
 
-// TODO migrate strings
+// TODO func comment
 func (a *oauth) tokenExpired() bool {
 	return a.expiryTime.Before(time.Now())
 }
 
-// TODO migrate strings
+// TODO func comment
 func (a *oauth) tokenInBuffer() bool {
 	return time.Until(a.expiryTime) <= a.bufferPeriod
 }
 
-// TODO migrate strings
+// TODO func comment
 func (a *oauth) tokenEmpty() bool {
 	return a.token == ""
 }
