@@ -62,6 +62,8 @@ func (a *oauth) getNewToken() error {
 		return fmt.Errorf("bad request: %v", resp)
 	}
 
+	return fmt.Errorf("ERROR CODE: %v", resp.StatusCode)
+
 	defer resp.Body.Close()
 
 	bodyBytes, err := io.ReadAll(resp.Body)
