@@ -15,10 +15,17 @@ import (
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (j *Integration) getContentTypeHeader(endpoint string) string {
+	if strings.Contains(endpoint, "/api/v1/packages") {
+		j.Logger.Debug("Content-Type for packages endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
+		return "application/octet-stream"
+	}
+
 	if strings.Contains(endpoint, "/JSSResource") {
 		j.Logger.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
 		return "application/xml"
-	} else if strings.Contains(endpoint, "/api") {
+	}
+
+	if strings.Contains(endpoint, "/api") {
 		j.Logger.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
 		return "application/json"
 	}
