@@ -16,7 +16,7 @@ import (
 func (j *Integration) getContentTypeHeader(endpoint string) string {
 	j.Logger.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
 
-	if strings.HasPrefix(endpoint, "/api/v1/packages/") && strings.HasSuffix(endpoint, "/upload") {
+	if strings.HasPrefix(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
 		j.Logger.Debug("Content-Type for packages upload endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
 		return "application/octet-stream"
 	}
