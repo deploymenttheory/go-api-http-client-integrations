@@ -6,17 +6,16 @@ import (
 	"go.uber.org/zap"
 )
 
-// GetContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
-// It attempts to find a content type that matches the endpoint prefix in the global configMap.
-// If a match is found and the content type is defined (not nil), it returns the specified content type.
-// If the content type is nil or no match is found in configMap, it falls back to default behaviors:
-// - For url endpoints starting with "/JSSResource", it defaults to "application/xml" for the Classic API.
-// - For url endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
+// getContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
+// It sets the Content-Type to "application/octet-stream" specifically for the endpoint "/api/v1/packages/{id}/upload".
+// For other endpoints, it attempts to match the Content-Type based on the endpoint pattern:
+// - For URL endpoints starting with "/JSSResource", it defaults to "application/xml" for the Classic API.
+// - For URL endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (j *Integration) getContentTypeHeader(endpoint string) string {
-	if strings.Contains(endpoint, "/api/v1/packages") {
-		j.Logger.Debug("Content-Type for packages endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
+	if strings.HasPrefix(endpoint, "/api/v1/packages/") && strings.HasSuffix(endpoint, "/upload") {
+		j.Logger.Debug("Content-Type for packages upload endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
 		return "application/octet-stream"
 	}
 
