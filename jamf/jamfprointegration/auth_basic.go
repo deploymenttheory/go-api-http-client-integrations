@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
 	"go.uber.org/zap"
 )
 
@@ -16,7 +15,7 @@ type basicAuth struct {
 	username     string
 	password     string
 	bufferPeriod time.Duration
-	logger       logger.Logger
+	Sugar        zap.SugaredLogger
 
 	// Computed
 	// basicToken            string
@@ -79,7 +78,7 @@ func (a *basicAuth) getNewToken() error {
 	a.bearerTokenExpiryTime = tokenResp.Expires
 	tokenDuration := time.Until(a.bearerTokenExpiryTime)
 
-	a.logger.Info("Token obtained successfully", zap.Time("Expiry", a.bearerTokenExpiryTime), zap.Duration("Duration", tokenDuration))
+	a.Sugar.Info("Token obtained successfully", zap.Time("Expiry", a.bearerTokenExpiryTime), zap.Duration("Duration", tokenDuration))
 
 	return nil
 }

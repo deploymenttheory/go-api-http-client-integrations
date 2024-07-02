@@ -14,24 +14,24 @@ import (
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
 func (j *Integration) getContentTypeHeader(endpoint string) string {
-	j.Logger.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
+	j.Sugar.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
 
 	if strings.Contains(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
-		j.Logger.Debug("Content-Type for packages upload endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
+		j.Sugar.Debug("Content-Type for packages upload endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
 		return "application/octet-stream"
 	}
 
 	if strings.Contains(endpoint, "/JSSResource") {
-		j.Logger.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
+		j.Sugar.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
 		return "application/xml"
 	}
 
 	if strings.Contains(endpoint, "/api") {
-		j.Logger.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
+		j.Sugar.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
 		return "application/json"
 	}
 
-	j.Logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
+	j.Sugar.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
 	return "application/json"
 }
 

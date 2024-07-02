@@ -56,7 +56,7 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 		}
 
 		if method == "POST" || method == "PUT" {
-			j.Logger.Debug("XML Request Body", zap.String("Body", string(data)))
+			j.Sugar.Debug("XML Request Body", zap.String("Body", string(data)))
 		}
 
 		return data, nil
@@ -64,13 +64,13 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 	case "json":
 		data, err = json.Marshal(body)
 		if err != nil {
-			j.Logger.Error("Failed marshaling JSON request", zap.Error(err))
+			j.Sugar.Error("Failed marshaling JSON request", zap.Error(err))
 			return nil, err
 		}
 
 		if method == "POST" || method == "PUT" || method == "PATCH" {
 			// TODO it hates this, pointer dereference on this log? Weird.
-			j.Logger.Debug("JSON Request Body:", zap.Any("body", json.RawMessage(data)))
+			j.Sugar.Debug("JSON Request Body:", zap.Any("body", json.RawMessage(data)))
 
 		}
 
@@ -95,7 +95,7 @@ func (j *Integration) marshalMultipartRequest(fields map[string]string, files ma
 	for formField, filePath := range files {
 		file, err := helpers.SafeOpenFile(filePath)
 		if err != nil {
-			j.Logger.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
+			j.Sugar.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
 			return nil, "", err
 		}
 		defer file.Close()

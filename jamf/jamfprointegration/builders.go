@@ -3,14 +3,14 @@ package jamfprointegration
 import (
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 // TODO migrate strings
-func BuildIntegrationWithOAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
+func BuildWithOAuth(jamfBaseDomain string, Sugar zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
-		Logger:               logger,
+		Sugar:                Sugar,
 		AuthMethodDescriptor: "oauth2",
 	}
 
@@ -21,10 +21,10 @@ func BuildIntegrationWithOAuth(jamfBaseDomain string, logger logger.Logger, buff
 }
 
 // TODO migrate strings
-func BuildIntegrationWithBasicAuth(jamfBaseDomain string, logger logger.Logger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
+func BuildWithBasicAuth(jamfBaseDomain string, Sugar zap.SugaredLogger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
-		Logger:               logger,
+		Sugar:                Sugar,
 		AuthMethodDescriptor: "basic",
 	}
 
@@ -41,7 +41,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 		clientSecret: clientSecret,
 		bufferPeriod: bufferPeriod,
 		baseDomain:   j.BaseDomain,
-		Logger:       j.Logger,
+		Sugar:        j.Sugar,
 	}
 
 	j.auth = &authInterface
@@ -53,7 +53,7 @@ func (j *Integration) BuildBasicAuth(username string, password string, bufferPer
 		username:     username,
 		password:     password,
 		bufferPeriod: bufferPeriod,
-		logger:       j.Logger,
+		Sugar:        j.Sugar,
 		baseDomain:   j.BaseDomain,
 	}
 

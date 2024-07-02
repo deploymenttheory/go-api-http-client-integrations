@@ -39,7 +39,7 @@ func (j *Integration) checkRefreshToken() error {
 	var err error
 
 	if j.auth.tokenEmpty() {
-		j.Logger.Warn(tokenEmptyWarnString)
+		j.Sugar.Warn(tokenEmptyWarnString)
 	}
 
 	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {

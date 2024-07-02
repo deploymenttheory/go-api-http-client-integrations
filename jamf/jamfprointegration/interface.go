@@ -3,14 +3,14 @@ package jamfprointegration
 import (
 	"net/http"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 // JamfAPIHandler implements the APIHandler interface for the Jamf Pro API.
 type Integration struct {
 	BaseDomain           string
 	AuthMethodDescriptor string
-	Logger               logger.Logger
+	Sugar                zap.SugaredLogger
 	auth                 authInterface
 }
 
