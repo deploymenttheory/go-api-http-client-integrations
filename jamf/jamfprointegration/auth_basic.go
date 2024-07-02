@@ -15,7 +15,7 @@ type basicAuth struct {
 	username     string
 	password     string
 	bufferPeriod time.Duration
-	Sugar        zap.SugaredLogger
+	Sugar        *zap.SugaredLogger
 
 	// Computed
 	// basicToken            string

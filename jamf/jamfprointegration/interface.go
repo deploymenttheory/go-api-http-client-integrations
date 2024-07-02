@@ -10,7 +10,7 @@ import (
 type Integration struct {
 	BaseDomain           string
 	AuthMethodDescriptor string
-	Sugar                zap.SugaredLogger
+	Sugar                *zap.SugaredLogger
 	auth                 authInterface
 }
 

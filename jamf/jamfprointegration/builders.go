@@ -7,7 +7,7 @@ import (
 )
 
 // TODO migrate strings
-func BuildWithOAuth(jamfBaseDomain string, Sugar zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
+func BuildWithOAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		Sugar:                Sugar,
@@ -21,7 +21,7 @@ func BuildWithOAuth(jamfBaseDomain string, Sugar zap.SugaredLogger, bufferPeriod
 }
 
 // TODO migrate strings
-func BuildWithBasicAuth(jamfBaseDomain string, Sugar zap.SugaredLogger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
+func BuildWithBasicAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
 		Sugar:                Sugar,

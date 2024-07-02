@@ -19,7 +19,7 @@ type oauth struct {
 	clientId     string
 	clientSecret string
 	bufferPeriod time.Duration
-	Sugar        zap.SugaredLogger
+	Sugar        *zap.SugaredLogger
 
 	// Computed
 	expiryTime time.Time
