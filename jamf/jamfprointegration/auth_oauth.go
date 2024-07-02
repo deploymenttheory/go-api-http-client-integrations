@@ -14,12 +14,14 @@ import (
 )
 
 type oauth struct {
+	Sugar *zap.SugaredLogger
+
 	// Set
-	baseDomain   string
-	clientId     string
-	clientSecret string
-	bufferPeriod time.Duration
-	Sugar        *zap.SugaredLogger
+	baseDomain        string
+	clientId          string
+	clientSecret      string
+	bufferPeriod      time.Duration
+	hideSensitiveData bool
 
 	// Computed
 	expiryTime time.Time
@@ -46,10 +48,14 @@ func (a *oauth) getNewToken() error {
 	data.Set("grant_type", "client_credentials")
 
 	oauthComlpeteEndpoint := a.baseDomain + oAuthTokenEndpoint
+	a.Sugar.Debugf("oauth endpoint constructed: %s", oauthComlpeteEndpoint)
+
 	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
 		return err
 	}
+
+	a.Sugar.Debugf("oauth token request constructed: %+v", req)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
@@ -77,6 +83,10 @@ func (a *oauth) getNewToken() error {
 		return fmt.Errorf("failed to decode OAuth response: %w", err)
 	}
 
+	if !a.hideSensitiveData {
+		a.Sugar.Debug("token recieved: %+v", oauthResp)
+	}
+
 	if oauthResp.AccessToken == "" {
 		return fmt.Errorf("empty access token received")
 	}
@@ -85,6 +95,7 @@ func (a *oauth) getNewToken() error {
 	a.expiryTime = time.Now().Add(expiresIn)
 	a.token = oauthResp.AccessToken
 
+	a.Sugar.Info("Token obtained successfully", zap.Time("Expiry", a.expiryTime))
 	return nil
 }
 

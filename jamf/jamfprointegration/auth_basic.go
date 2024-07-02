@@ -10,12 +10,14 @@ import (
 )
 
 type basicAuth struct {
+	Sugar *zap.SugaredLogger
+
 	// Set
-	baseDomain   string
-	username     string
-	password     string
-	bufferPeriod time.Duration
-	Sugar        *zap.SugaredLogger
+	baseDomain        string
+	username          string
+	password          string
+	bufferPeriod      time.Duration
+	hideSensitiveData bool
 
 	// Computed
 	// basicToken            string
@@ -50,10 +52,13 @@ func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
 
 	completeBearerEndpoint := a.baseDomain + bearerTokenEndpoint
+	a.Sugar.Debugf("bearer endpoint constructed: %s", completeBearerEndpoint)
+
 	req, err := http.NewRequest("POST", completeBearerEndpoint, nil)
 	if err != nil {
 		return err
 	}
+	a.Sugar.Debugf("bearer token request constructed: %+v", req)
 
 	req.SetBasicAuth(a.username, a.password)
 
@@ -61,8 +66,8 @@ func (a *basicAuth) getNewToken() error {
 	if err != nil {
 		return err
 	}
-
 	defer resp.Body.Close()
+	a.Sugar.Debugf("bearer token request made: %v", resp.StatusCode)
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("received non-OK response status: %d", resp.StatusCode)
@@ -72,6 +77,10 @@ func (a *basicAuth) getNewToken() error {
 	err = json.NewDecoder(resp.Body).Decode(tokenResp)
 	if err != nil {
 		return err
+	}
+
+	if !a.hideSensitiveData {
+		a.Sugar.Debug("token recieved: %+v", tokenResp)
 	}
 
 	a.bearerToken = tokenResp.Token

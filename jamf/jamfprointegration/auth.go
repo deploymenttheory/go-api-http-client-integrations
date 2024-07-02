@@ -44,7 +44,6 @@ func (j *Integration) checkRefreshToken() error {
 
 	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
 		err = j.auth.getNewToken()
-
 		if err != nil {
 			return err
 		}
