@@ -41,7 +41,7 @@ func (m *Integration) checkRefreshToken() error {
 	var err error
 
 	if m.auth.tokenEmpty() {
-		m.Logger.Warn(tokenEmptyWarnString)
+		m.Sugar.Warn(tokenEmptyWarnString)
 	}
 
 	if m.auth.tokenExpired() || m.auth.tokenInBuffer() || m.auth.tokenEmpty() {

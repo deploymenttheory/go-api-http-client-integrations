@@ -48,15 +48,15 @@ func (m *Integration) marshalRequest(body interface{}, method string, endpoint s
 	// Marshal the body as JSON
 	data, err = json.Marshal(body)
 	if err != nil {
-		m.Logger.Error("Failed marshaling JSON request", zap.Error(err))
+		m.Sugar.Error("Failed marshaling JSON request", zap.Error(err))
 		return nil, err
 	}
 
 	// Log the JSON request body for methods that require it
 	if methodsWithBody[method] {
-		m.Logger.Debug("JSON Request Body", zap.String("Body", string(data)), zap.String("Endpoint", endpoint))
+		m.Sugar.Debug("JSON Request Body", zap.String("Body", string(data)), zap.String("Endpoint", endpoint))
 	} else {
-		m.Logger.Debug("Request Endpoint", zap.String("Endpoint", endpoint))
+		m.Sugar.Debug("Request Endpoint", zap.String("Endpoint", endpoint))
 	}
 
 	return data, nil
@@ -76,7 +76,7 @@ func (m *Integration) marshalMultipartRequest(fields map[string]string, files ma
 	for formField, filePath := range files {
 		file, err := helpers.SafeOpenFile(filePath)
 		if err != nil {
-			m.Logger.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
+			m.Sugar.Error("Failed to open file securely", zap.String("file", filePath), zap.Error(err))
 			return nil, "", err
 		}
 		defer file.Close()

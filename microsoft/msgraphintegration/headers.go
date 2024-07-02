@@ -17,17 +17,17 @@ func (m *Integration) getContentTypeHeader(endpoint string) string {
 	for key, config := range configMap {
 		if strings.HasPrefix(endpoint, key) {
 			if config.ContentType != nil {
-				m.Logger.Debug("Content-Type for endpoint found in configMap", zap.String("endpoint", endpoint), zap.String("content_type", *config.ContentType))
+				m.Sugar.Debug("Content-Type for endpoint found in configMap", zap.String("endpoint", endpoint), zap.String("content_type", *config.ContentType))
 				return *config.ContentType
 			}
-			m.Logger.Debug("Content-Type for endpoint is nil in configMap, handling as special case", zap.String("endpoint", endpoint))
+			m.Sugar.Debug("Content-Type for endpoint is nil in configMap, handling as special case", zap.String("endpoint", endpoint))
 			// If a nil ContentType is an expected case, do not set Content-Type header.
 			return "" // Return empty to indicate no Content-Type should be set.
 		}
 	}
 
 	// Fallback to JSON if no other match is found.
-	m.Logger.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
+	m.Sugar.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
 	return "application/json"
 }
 

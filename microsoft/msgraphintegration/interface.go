@@ -4,7 +4,7 @@ package msgraphintegration
 import (
 	"net/http"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 // Integration implements the APIHandler interface for the Microsoft Graph API.
@@ -12,7 +12,7 @@ type Integration struct {
 	TenantID             string // TenantID used for constructing the authentication endpoint.
 	TenantName           string // TenantName used for constructing the authentication endpoint.
 	AuthMethodDescriptor string
-	Logger               logger.Logger
+	Sugar                *zap.SugaredLogger
 	auth                 authInterface
 }
 

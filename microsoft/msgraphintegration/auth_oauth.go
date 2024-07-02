@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 type oauth struct {
@@ -20,7 +20,7 @@ type oauth struct {
 	clientSecret string
 	tenantID     string
 	bufferPeriod time.Duration
-	Logger       logger.Logger
+	Sugar        *zap.SugaredLogger
 
 	// Computed
 	expiryTime time.Time

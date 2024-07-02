@@ -4,7 +4,7 @@ package msgraphintegration
 import (
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/logger"
+	"go.uber.org/zap"
 )
 
 // BuildIntegrationWithOAuth constructs an Integration instance using OAuth2.0 authentication.
@@ -21,10 +21,10 @@ import (
 // Returns:
 //   - *Integration: A pointer to the constructed Integration instance.
 //   - error: Any error encountered during the token refresh check.
-func BuildIntegrationWithOAuth(logger logger.Logger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string) (*Integration, error) {
+func BuildIntegrationWithOAuth(Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string) (*Integration, error) {
 	integration := &Integration{
 		TenantID:             tenantID,
-		Logger:               logger,
+		Sugar:                Sugar,
 		AuthMethodDescriptor: "oauth2",
 	}
 
@@ -48,10 +48,10 @@ func BuildIntegrationWithOAuth(logger logger.Logger, bufferPeriod time.Duration,
 // Returns:
 //   - *Integration: A pointer to the constructed Integration instance.
 //   - error: Any error encountered during the token refresh check.
-func BuildIntegrationWithBasicAuth(logger logger.Logger, bufferPeriod time.Duration, username string, password string, tenantID string) (*Integration, error) {
+func BuildIntegrationWithBasicAuth(Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, tenantID string) (*Integration, error) {
 	integration := &Integration{
 		TenantID:             tenantID,
-		Logger:               logger,
+		Sugar:                Sugar,
 		AuthMethodDescriptor: "basic",
 	}
 
@@ -73,7 +73,7 @@ func (m *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 		clientId:     clientId,
 		clientSecret: clientSecret,
 		bufferPeriod: bufferPeriod,
-		Logger:       m.Logger,
+		Sugar:        m.Sugar,
 		tenantID:     tenantID,
 	}
 
@@ -92,7 +92,7 @@ func (j *Integration) BuildBasicAuth(username string, password string, bufferPer
 		username:     username,
 		password:     password,
 		bufferPeriod: bufferPeriod,
-		logger:       j.Logger,
+		Sugar:        j.Sugar,
 		tenantID:     tenantID,
 	}
 
