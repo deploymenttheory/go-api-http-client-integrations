@@ -40,8 +40,7 @@ func (j *Integration) CheckRefreshToken() error {
 
 // TODO migrate strings
 func (j *Integration) PrepRequestParamsAndAuth(req *http.Request) error {
-	err := j.prepRequest(req)
-	return err
+	return j.prepRequest(req)
 }
 
 // TODO migrate strings

@@ -40,7 +40,6 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 		err  error
 	)
 
-	// Determine the format based on the endpoint
 	format := "json"
 	if strings.Contains(endpoint, "/JSSResource") {
 		format = "xml"
