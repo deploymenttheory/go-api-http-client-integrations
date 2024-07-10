@@ -10,12 +10,9 @@ const (
 )
 
 type authInterface interface {
-	// Token Operations
 	getNewToken() error
 	getTokenString() string
 	getExpiryTime() time.Time
-
-	// Token Utils
 	tokenExpired() bool
 	tokenInBuffer() bool
 	tokenEmpty() bool

@@ -9,28 +9,23 @@ import (
 	"go.uber.org/zap"
 )
 
+// basicAuth struct implements authInterface for this integration
 type basicAuth struct {
-	Sugar *zap.SugaredLogger
-
-	// Set
-	baseDomain        string
-	username          string
-	password          string
-	bufferPeriod      time.Duration
-	hideSensitiveData bool
-
-	// Computed
-	// basicToken            string
+	Sugar                 *zap.SugaredLogger
+	baseDomain            string
+	username              string
+	password              string
+	bufferPeriod          time.Duration
+	hideSensitiveData     bool
 	bearerToken           string
 	bearerTokenExpiryTime time.Time
 }
 
+// basicAuthResponse serves as a json structure map for the basicAuth response from Jamf.
 type basicAuthResponse struct {
 	Token   string    `json:"token"`
 	Expires time.Time `json:"expires"`
 }
-
-// Operations
 
 // getNewToken obtains a new bearer token from the authentication server.
 // This function constructs a new HTTP request to the bearer token endpoint using the basic authentication credentials,
@@ -50,7 +45,6 @@ type basicAuthResponse struct {
 // TODO migrate strings
 func (a *basicAuth) getNewToken() error {
 	client := http.Client{}
-
 	completeBearerEndpoint := a.baseDomain + bearerTokenEndpoint
 	a.Sugar.Debugf("bearer endpoint constructed: %s", completeBearerEndpoint)
 
@@ -58,6 +52,7 @@ func (a *basicAuth) getNewToken() error {
 	if err != nil {
 		return err
 	}
+
 	a.Sugar.Debugf("bearer token request constructed: %+v", req)
 
 	req.SetBasicAuth(a.username, a.password)
@@ -67,6 +62,7 @@ func (a *basicAuth) getNewToken() error {
 		return err
 	}
 	defer resp.Body.Close()
+
 	a.Sugar.Debugf("bearer token request made: %v", resp.StatusCode)
 
 	if resp.StatusCode != http.StatusOK {
@@ -109,8 +105,6 @@ func (a *basicAuth) getTokenString() string {
 func (a *basicAuth) getExpiryTime() time.Time {
 	return a.bearerTokenExpiryTime
 }
-
-// Utils
 
 // tokenExpired checks if the current bearer token has expired.
 // This function compares the current time with the bearer token's expiry time to determine if the token has expired.

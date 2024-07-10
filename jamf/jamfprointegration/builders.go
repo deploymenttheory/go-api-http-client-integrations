@@ -6,7 +6,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// TODO migrate strings
+// BuildWithOAuth is a helper function allowing the full construct of a Jamf Integration using OAuth2
 func BuildWithOAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, hideSensitiveData bool) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
@@ -20,7 +20,7 @@ func BuildWithOAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPerio
 	return &integration, err
 }
 
-// TODO migrate strings
+// BuildWithBasicAuth is a helper function allowing the full construct of a Jamf Integration using BasicAuth
 func BuildWithBasicAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, hideSensitiveData bool) (*Integration, error) {
 	integration := Integration{
 		BaseDomain:           jamfBaseDomain,
@@ -34,7 +34,7 @@ func BuildWithBasicAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferP
 	return &integration, err
 }
 
-// TODO migrate strings
+// BuildOAuth is a helper which returns just a configured OAuth interface
 func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration, hideSensitiveData bool) {
 	authInterface := oauth{
 		clientId:          clientId,
@@ -48,7 +48,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 	j.auth = &authInterface
 }
 
-// TODO migrate strings
+// BuildBasicAuth is a helper which returns just a configured Basic Auth interface/
 func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration, hideSensitiveData bool) {
 	authInterface := basicAuth{
 		username:          username,

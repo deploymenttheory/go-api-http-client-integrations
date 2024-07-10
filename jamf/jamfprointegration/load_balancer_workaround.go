@@ -6,7 +6,7 @@ import (
 	"slices"
 )
 
-// TODO migrate strings
+// GetSessionCookies retrieves all cookies from the current session
 func (j *Integration) getSessionCookies(urlString string) ([]*http.Cookie, error) {
 	var returnList []*http.Cookie
 	balancerValue, err := j.GetLoadBalancer(urlString)
@@ -17,7 +17,7 @@ func (j *Integration) getSessionCookies(urlString string) ([]*http.Cookie, error
 	return returnList, nil
 }
 
-// TODO migrate strings
+// GetLoadBalancer programatically always returns the most alphabetical load balancer from a session
 func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	allBalancers, err := j.getAllLoadBalancers(urlString)
 	if err != nil {
@@ -28,7 +28,7 @@ func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	return chosenCookie, nil
 }
 
-// TODO migrate strings
+// chooseMostAlphabeticalString returns the most alphabetical string from a list of strings
 func chooseMostAlphabeticalString(strings []string) string {
 	if len(strings) == 0 {
 		return ""

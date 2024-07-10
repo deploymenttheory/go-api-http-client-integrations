@@ -13,19 +13,16 @@ import (
 	"go.uber.org/zap"
 )
 
+// oauth implements the authInterface for Oauth2 support
 type oauth struct {
-	Sugar *zap.SugaredLogger
-
-	// Set
+	Sugar             *zap.SugaredLogger
 	baseDomain        string
 	clientId          string
 	clientSecret      string
 	bufferPeriod      time.Duration
 	hideSensitiveData bool
-
-	// Computed
-	expiryTime time.Time
-	token      string
+	expiryTime        time.Time
+	token             string
 }
 
 // OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
@@ -36,13 +33,12 @@ type OAuthResponse struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 }
 
-// Operations
-
 // TODO migrate strings
+
+// getNewToken updates the held token and expiry information
 func (a *oauth) getNewToken() error {
 	client := http.Client{}
 	data := url.Values{}
-
 	data.Set("client_id", a.clientId)
 	data.Set("client_secret", a.clientSecret)
 	data.Set("grant_type", "client_credentials")
@@ -99,29 +95,27 @@ func (a *oauth) getNewToken() error {
 	return nil
 }
 
-// TODO func comment
+// getTokenString returns the current token as a string
 func (a *oauth) getTokenString() string {
 	return a.token
 }
 
-// TODO func comment
+// getExpiryTime returns the current token's expiry time as a time.Time var.
 func (a *oauth) getExpiryTime() time.Time {
 	return a.expiryTime
 }
 
-// Utils
-
-// TODO func comment
+// tokenExpired returns a bool denoting if the current token expiry time has passed.
 func (a *oauth) tokenExpired() bool {
 	return a.expiryTime.Before(time.Now())
 }
 
-// TODO func comment
+// tokenInBuffer returns a bool denoting if the current token's duration until expiry is within the buffer period
 func (a *oauth) tokenInBuffer() bool {
 	return time.Until(a.expiryTime) <= a.bufferPeriod
 }
 
-// TODO func comment
+// tokenEmpty returns a bool denoting if the current token string is empty.
 func (a *oauth) tokenEmpty() bool {
 	return a.token == ""
 }

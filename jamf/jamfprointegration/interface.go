@@ -14,46 +14,42 @@ type Integration struct {
 	auth                 authInterface
 }
 
-// Info
-
-// TODO migrate strings
+// getFQDN returns just the FQDN // TODO remove the "get"
 func (j *Integration) GetFQDN() string {
 	return j.BaseDomain
 }
 
-// TODO this comment
+// constructURL appends any endpoint to the FQDN
 func (j *Integration) ConstructURL(endpoint string) string {
 	return j.GetFQDN() + endpoint
 }
 
-// TODO migrate strings
+// GetAuthMethodDescriptor returns a single string describing the auth method for debug and logging purposes
 func (j *Integration) GetAuthMethodDescriptor() string {
 	return j.AuthMethodDescriptor
 }
 
-// Utilities
-
-// TODO migrate strings
+// CheckRefreshToken ensures the token is valid and refreshes if it is not.
 func (j *Integration) CheckRefreshToken() error {
 	return j.checkRefreshToken()
 }
 
-// TODO migrate strings
+// PrepRequestParamsAndAuth applies any parameters and authentication headers to a http.Request
 func (j *Integration) PrepRequestParamsAndAuth(req *http.Request) error {
 	return j.prepRequest(req)
 }
 
-// TODO migrate strings
+// PrepRequestBody formats body data to meet the API requirements.
 func (j *Integration) PrepRequestBody(body interface{}, method string, endpoint string) ([]byte, error) {
 	return j.marshalRequest(body, method, endpoint)
 }
 
-// TODO migrate strings
+// TODO this comment
 func (j *Integration) MarshalMultipartRequest(fields map[string]string, files map[string]string) ([]byte, string, error) {
 	return j.marshalMultipartRequest(fields, files)
 }
 
-// TODO migrate strings
+// GetSessionCookies retrieves all cookies from the current session
 func (j *Integration) GetSessionCookies() ([]*http.Cookie, error) {
 	domain := j.GetFQDN()
 	return j.getSessionCookies(domain)
