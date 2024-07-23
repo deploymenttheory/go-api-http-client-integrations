@@ -67,11 +67,11 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 			return nil, err
 		}
 
-		if method == "POST" || method == "PUT" || method == "PATCH" {
-			// TODO it hates this, pointer dereference on this log? Weird.
-			// j.Sugar.Debug("JSON Request Body:", zap.Any("body", json.RawMessage(data)))
+		// if method == "POST" || method == "PUT" || method == "PATCH" {
+		// 	// TODO it hates this, pointer dereference on this log? Weird.
+		// 	// j.Sugar.Debug("JSON Request Body:", zap.Any("body", json.RawMessage(data)))
 
-		}
+		// }
 
 		return data, nil
 

@@ -2,16 +2,12 @@ package jamfprointegration
 
 import (
 	"net/http"
-	"net/url"
 
 	"go.uber.org/zap"
 )
 
 func test_newTestRequest() *http.Request {
-	url, _ := url.Parse("https://yourserver.jamfcloud.com/JSSresource/endpoint")
-	out := &http.Request{
-		URL: url,
-	}
+	out, _ := http.NewRequest("GET", "https://yourserver.jamfcloud.com/JSSresource/endpoint", nil)
 	return out
 }
 
