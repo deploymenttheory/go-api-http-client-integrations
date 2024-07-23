@@ -17,21 +17,21 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 	j.Sugar.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
 
 	if strings.Contains(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
-		j.Sugar.Debug("Content-Type for packages upload endpoint set to application/octet-stream", zap.String("endpoint", endpoint))
+		j.Sugar.Debugw("Content-Type for packages upload endpoint set to application/octet-stream", "endpoint", endpoint)
 		return "application/octet-stream"
 	}
 
 	if strings.Contains(endpoint, "/JSSResource") {
-		j.Sugar.Debug("Content-Type for endpoint defaulting to XML for Classic API", zap.String("endpoint", endpoint))
+		j.Sugar.Debugw("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
 		return "application/xml"
 	}
 
 	if strings.Contains(endpoint, "/api") {
-		j.Sugar.Debug("Content-Type for endpoint defaulting to JSON for JamfPro API", zap.String("endpoint", endpoint))
+		j.Sugar.Debugw("Content-Type for endpoint defaulting to JSON for JamfPro API", "endpoint", endpoint)
 		return "application/json"
 	}
 
-	j.Sugar.Debug("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", zap.String("endpoint", endpoint))
+	j.Sugar.Warnw("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", "endpoint", endpoint)
 	return "application/json"
 }
 
