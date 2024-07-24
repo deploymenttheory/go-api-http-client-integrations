@@ -32,6 +32,7 @@ func (j *Integration) prepRequest(req *http.Request) error {
 
 	err := j.checkRefreshToken()
 	if err != nil {
+		j.Sugar.Warnw("error refreshing token", "error", err)
 		return err
 	}
 
