@@ -31,7 +31,7 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 		return "application/json"
 	}
 
-	j.Sugar.Warnw("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", "endpoint", endpoint)
+	// j.Sugar.Warnw("Content-Type for endpoint not found in configMap or standard patterns, using default JSON", "endpoint", endpoint)
 	return "application/json"
 }
 

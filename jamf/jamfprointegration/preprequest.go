@@ -22,7 +22,7 @@ import (
 //   - Checks and refreshes the token if necessary using the Integration's checkRefreshToken method.
 //   - Adds an "Authorization" header with a Bearer token obtained from the Integration's auth.getTokenString method.
 func (j *Integration) prepRequest(req *http.Request) error {
-	j.Sugar.Debugw("prepping request", "req", fmt.Sprintf("%+v", req))
+	// j.Sugar.Debugw("prepping request", "req", fmt.Sprintf("%+v", req))
 
 	req.Header.Add("Accept", j.getAcceptHeader())
 	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))

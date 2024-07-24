@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -23,6 +24,7 @@ type oauth struct {
 	hideSensitiveData bool
 	expiryTime        time.Time
 	token             string
+	httpExecutor      httpclient.HTTPExecutor
 }
 
 // OAuthResponse represents the response structure when obtaining an OAuth access token from JamfPro.
@@ -37,7 +39,6 @@ type OAuthResponse struct {
 
 // getNewToken updates the held token and expiry information
 func (a *oauth) getNewToken() error {
-	client := http.Client{}
 	data := url.Values{}
 	data.Set("client_id", a.clientId)
 	data.Set("client_secret", a.clientSecret)
@@ -55,7 +56,7 @@ func (a *oauth) getNewToken() error {
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := client.Do(req)
+	resp, err := a.httpExecutor.Do(req)
 	if err != nil {
 		return err
 	}

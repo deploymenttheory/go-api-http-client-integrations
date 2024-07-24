@@ -12,7 +12,7 @@ func test_newTestRequest() *http.Request {
 }
 
 func test_newSugaredLogger() *zap.SugaredLogger {
-	logger, _ := zap.NewDevelopment()
+	logger, _ := zap.NewProduction()
 	return logger.Sugar()
 }
 
