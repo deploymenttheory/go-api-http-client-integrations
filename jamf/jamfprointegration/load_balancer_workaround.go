@@ -51,7 +51,6 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	var err error
 	var req *http.Request
 	var resp *http.Response
-	client := http.Client{}
 
 	for i := 0; i < LoadBalancerPollCount; i++ {
 		req, err = http.NewRequest("GET", urlString, nil)
@@ -64,7 +63,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 			return nil, fmt.Errorf("error populating auth: %v", err)
 		}
 
-		resp, err = client.Do(req)
+		resp, err = j.httpExecutor.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("error sending req: %v", err)
 		}

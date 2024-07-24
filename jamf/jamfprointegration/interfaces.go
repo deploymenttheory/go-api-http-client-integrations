@@ -3,6 +3,7 @@ package jamfprointegration
 import (
 	"net/http"
 
+	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -12,6 +13,7 @@ type Integration struct {
 	AuthMethodDescriptor string
 	Sugar                *zap.SugaredLogger
 	auth                 authInterface
+	httpExecutor         httpclient.HTTPExecutor
 }
 
 // getFQDN returns just the FQDN // TODO remove the "get"
