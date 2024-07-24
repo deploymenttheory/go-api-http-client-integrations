@@ -41,13 +41,21 @@ func TestBuildWithOAuth(t *testing.T) {
 				clientId:          testClientId,
 				clientSecret:      testClientSecret,
 				hideSensitiveData: false,
-				executor:          &httpclient.MockExecutor{LockedResponseCode: 200},
+				executor:          &httpclient.MockExecutor{LockedResponseCode: 200, ResponseBody: test_getSampleJson()},
 			},
+			want: &Integration{
+				BaseDomain:           testBaseDomain,
+				AuthMethodDescriptor: "oauth2",
+				Sugar:                test_newSugaredLogger(),
+				auth:                 &oauth{},
+				httpExecutor:         &httpclient.MockExecutor{},
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := BuildWithOAuth(tt.args.jamfBaseDomain, tt.args.Sugar, tt.args.bufferPeriod, tt.args.clientId, tt.args.clientSecret, tt.args.hideSensitiveData, tt.args.executor)
+			got, err := BuildWithOAuth(tt.args.jamfBaseDomain, tt.args.Sugar, tt.args.bufferPeriod, tt.args.clientId, tt.args.clientSecret, tt.args.hideSensitiveData, &tt.args.executor)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BuildWithOAuth() error = %v, wantErr %v", err, tt.wantErr)
 				return

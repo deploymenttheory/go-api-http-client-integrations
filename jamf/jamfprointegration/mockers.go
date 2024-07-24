@@ -1,6 +1,7 @@
 package jamfprointegration
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -29,4 +30,17 @@ func test_MockIntegration() *Integration {
 		auth:                 test_newMockauth(),
 	}
 	return &out
+}
+
+func test_getSampleJson() string {
+	data := struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int    `json:"expires_in"`
+	}{
+		AccessToken: "AccessToken",
+		ExpiresIn:   500,
+	}
+
+	jsonData, _ := json.Marshal(data)
+	return string(jsonData)
 }

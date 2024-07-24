@@ -39,27 +39,33 @@ type OAuthResponse struct {
 
 // getNewToken updates the held token and expiry information
 func (a *oauth) getNewToken() error {
+	a.Sugar.Warn("THREE-TWO-ONE")
 	data := url.Values{}
 	data.Set("client_id", a.clientId)
 	data.Set("client_secret", a.clientSecret)
 	data.Set("grant_type", "client_credentials")
 
+	a.Sugar.Warn("THREE-TWO-TWO")
 	oauthComlpeteEndpoint := a.baseDomain + oAuthTokenEndpoint
 	a.Sugar.Debugf("oauth endpoint constructed: %s", oauthComlpeteEndpoint)
 
+	a.Sugar.Warn("THREE-TWO-THREE")
 	req, err := http.NewRequest("POST", oauthComlpeteEndpoint, strings.NewReader(data.Encode()))
 	if err != nil {
 		return err
 	}
+	a.Sugar.Warn("THREE-TWO-FOUR")
 
 	a.Sugar.Debugf("oauth token request constructed: %+v", req)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
+	a.Sugar.Warn("THREE-TWO-FIVE")
 	resp, err := a.httpExecutor.Do(req)
 	if err != nil {
 		return err
 	}
+	a.Sugar.Warn("THREE-TWO-SIX")
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return fmt.Errorf("bad request getting auth token: %v", resp)
@@ -67,13 +73,16 @@ func (a *oauth) getNewToken() error {
 
 	defer resp.Body.Close()
 
+	a.Sugar.Warn("THREE-TWO-SEVEN")
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
+	a.Sugar.Warn("THREE-TWO-EIGHT")
 
 	resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
+	a.Sugar.Warn("THREE-TWO-NINE")
 	oauthResp := &OAuthResponse{}
 	err = json.Unmarshal(bodyBytes, oauthResp)
 	if err != nil {
