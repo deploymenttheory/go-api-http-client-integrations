@@ -38,12 +38,9 @@ func (j *Integration) checkRefreshToken() error {
 	if j.auth.tokenEmpty() {
 		j.Sugar.Warn(tokenEmptyWarnString)
 	}
-	j.Sugar.Warn("THREE-ONE")
 
 	if j.auth.tokenExpired() || j.auth.tokenInBuffer() || j.auth.tokenEmpty() {
-		j.Sugar.Warn("THREE-TWO")
 		err = j.auth.getNewToken()
-		j.Sugar.Warn("THREE-THREE")
 		if err != nil {
 			return err
 		}
