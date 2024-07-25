@@ -46,7 +46,6 @@ func chooseMostAlphabeticalString(strings []string) string {
 
 // TODO migrate strings
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
-
 	var outList []string
 	var err error
 	var req *http.Request
