@@ -6,6 +6,21 @@ import (
 	"go.uber.org/zap"
 )
 
+const WeightedAcceptHeader = "application/x-x509-ca-cert;q=0.95," +
+	"application/pkix-cert;q=0.94," +
+	"application/pem-certificate-chain;q=0.93," +
+	"application/octet-stream;q=0.8," + // For general binary files
+	"image/png;q=0.75," +
+	"image/jpeg;q=0.74," +
+	"image/*;q=0.7," +
+	"application/xml;q=0.65," +
+	"text/xml;q=0.64," +
+	"text/xml;charset=UTF-8;q=0.63," +
+	"application/json;q=0.5," +
+	"text/html;q=0.5," +
+	"text/plain;q=0.4," +
+	"*/*;q=0.05"
+
 // getContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
 // It sets the Content-Type to "application/octet-stream" specifically for the endpoint "/api/v1/packages/{id}/upload".
 // For other endpoints, it attempts to match the Content-Type based on the endpoint pattern:
@@ -16,6 +31,7 @@ import (
 func (j *Integration) getContentTypeHeader(endpoint string) string {
 	j.Sugar.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
 
+	// TODO change this contains to regex. We want to rule out malformed endpoints with multiple occurances.
 	if strings.Contains(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
 		j.Sugar.Debugw("Content-Type for packages upload endpoint set to application/octet-stream", "endpoint", endpoint)
 		return "application/octet-stream"
@@ -23,6 +39,7 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 
 	if strings.Contains(endpoint, "/JSSResource") {
 		j.Sugar.Debugw("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
+		// TODO should this be application/xml or text/xml?
 		return "application/xml"
 	}
 
@@ -43,22 +60,7 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 // indicating a preference for XML. The specified MIME types cover common content formats like
 // images, JSON, XML, HTML, plain text, and certificates, with a fallback option for all other types.
 func (j *Integration) getAcceptHeader() string {
-	weightedAcceptHeader := "application/x-x509-ca-cert;q=0.95," +
-		"application/pkix-cert;q=0.94," +
-		"application/pem-certificate-chain;q=0.93," +
-		"application/octet-stream;q=0.8," + // For general binary files
-		"image/png;q=0.75," +
-		"image/jpeg;q=0.74," +
-		"image/*;q=0.7," +
-		"application/xml;q=0.65," +
-		"text/xml;q=0.64," +
-		"text/xml;charset=UTF-8;q=0.63," +
-		"application/json;q=0.5," +
-		"text/html;q=0.5," +
-		"text/plain;q=0.4," +
-		"*/*;q=0.05" // Fallback for any other types
-
-	return weightedAcceptHeader
+	return WeightedAcceptHeader
 }
 
 // getUserAgentHeader returns the User-Agent header string for the Jamf Pro API.
