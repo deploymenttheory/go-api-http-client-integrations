@@ -96,33 +96,29 @@ func TestIntegration_getAcceptHeader(t *testing.T) {
 	}
 }
 
-// func TestIntegration_getUserAgentHeader(t *testing.T) {
-// 	type fields struct {
-// 		BaseDomain           string
-// 		AuthMethodDescriptor string
-// 		Sugar                *zap.SugaredLogger
-// 		auth                 authInterface
-// 		httpExecutor         httpclient.HTTPExecutor
-// 	}
-// 	tests := []struct {
-// 		name   string
-// 		fields fields
-// 		want   string
-// 	}{
-// 		// TODO: Add test cases.
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			j := &Integration{
-// 				BaseDomain:           tt.fields.BaseDomain,
-// 				AuthMethodDescriptor: tt.fields.AuthMethodDescriptor,
-// 				Sugar:                tt.fields.Sugar,
-// 				auth:                 tt.fields.auth,
-// 				httpExecutor:         tt.fields.httpExecutor,
-// 			}
-// 			if got := j.getUserAgentHeader(); got != tt.want {
-// 				t.Errorf("Integration.getUserAgentHeader() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
+func TestIntegration_getUserAgentHeader(t *testing.T) {
+	type fields struct {
+		integration Integration
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   string
+	}{
+		{
+			name: "singular",
+			fields: fields{
+				integration: Integration{},
+			},
+			want: UserAgentHeader,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			j := tt.fields.integration
+			if got := j.getUserAgentHeader(); got != tt.want {
+				t.Errorf("Integration.getUserAgentHeader() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

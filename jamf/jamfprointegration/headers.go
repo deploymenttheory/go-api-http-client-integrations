@@ -6,20 +6,24 @@ import (
 	"go.uber.org/zap"
 )
 
-const WeightedAcceptHeader = "application/x-x509-ca-cert;q=0.95," +
-	"application/pkix-cert;q=0.94," +
-	"application/pem-certificate-chain;q=0.93," +
-	"application/octet-stream;q=0.8," + // For general binary files
-	"image/png;q=0.75," +
-	"image/jpeg;q=0.74," +
-	"image/*;q=0.7," +
-	"application/xml;q=0.65," +
-	"text/xml;q=0.64," +
-	"text/xml;charset=UTF-8;q=0.63," +
-	"application/json;q=0.5," +
-	"text/html;q=0.5," +
-	"text/plain;q=0.4," +
-	"*/*;q=0.05"
+const (
+	WeightedAcceptHeader = "application/x-x509-ca-cert;q=0.95," +
+		"application/pkix-cert;q=0.94," +
+		"application/pem-certificate-chain;q=0.93," +
+		"application/octet-stream;q=0.8," + // For general binary files
+		"image/png;q=0.75," +
+		"image/jpeg;q=0.74," +
+		"image/*;q=0.7," +
+		"application/xml;q=0.65," +
+		"text/xml;q=0.64," +
+		"text/xml;charset=UTF-8;q=0.63," +
+		"application/json;q=0.5," +
+		"text/html;q=0.5," +
+		"text/plain;q=0.4," +
+		"*/*;q=0.05"
+
+	UserAgentHeader = "go-api-http-client-jamfpro-integration"
+)
 
 // getContentTypeHeader determines the appropriate Content-Type header for a given API endpoint.
 // It sets the Content-Type to "application/octet-stream" specifically for the endpoint "/api/v1/packages/{id}/upload".
@@ -65,5 +69,5 @@ func (j *Integration) getAcceptHeader() string {
 
 // getUserAgentHeader returns the User-Agent header string for the Jamf Pro API.
 func (j *Integration) getUserAgentHeader() string {
-	return "go-api-http-client-jamfpro-integration"
+	return UserAgentHeader
 }
