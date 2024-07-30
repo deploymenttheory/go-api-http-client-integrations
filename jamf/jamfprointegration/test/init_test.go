@@ -14,15 +14,8 @@ import (
 // API integration has a settable expiry period and is set to 60s
 // Account tokens do not have this. I think the expiry is an hour.
 
-const (
-	ENV_KEY_JAMFPRO_FQDN  = "TEST_JAMFPRO_FQDN"
-	ENV_KEY_CLIENT_ID     = "TEST_JAMFPRO_CLIENT_ID"
-	ENV_KEY_CLIENT_SECRET = "TEST_JAMFPRO_CLIENT_SECRET"
-	ENV_KEY_USERNAME      = "TEST_JAMFPRO_USERNAME"
-	ENV_KEY_PASSWORD      = "TEST_JAMFPRO_PASSWORD"
-)
-
 func Test_BuildWithOAuth(t *testing.T) {
+	logger := NewSugaredDevelopmentLogger()
 	type args struct {
 		jamfProFQDN       string
 		Sugar             *zap.SugaredLogger
@@ -47,7 +40,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				bufferPeriod:      10 * time.Second,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: false,
 		},
@@ -60,7 +53,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
@@ -73,7 +66,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
@@ -86,7 +79,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
@@ -104,6 +97,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 }
 
 func TestBuildWithBasicAuth(t *testing.T) {
+	logger := NewSugaredDevelopmentLogger()
 	type args struct {
 		jamfProFQDN       string
 		Sugar             *zap.SugaredLogger
@@ -128,7 +122,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				bufferPeriod:      10 * time.Second,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: false,
 		},
@@ -141,7 +135,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
@@ -154,7 +148,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
@@ -167,7 +161,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
 				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
-				Sugar:             newSugaredDevelopmentLogger(),
+				Sugar:             logger,
 			},
 			wantErr: true,
 		},
