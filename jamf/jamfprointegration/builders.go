@@ -8,9 +8,9 @@ import (
 )
 
 // BuildWithOAuth is a helper function allowing the full construct of a Jamf Integration using OAuth2
-func BuildWithOAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
+func BuildWithOAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
 	integration := Integration{
-		BaseDomain:           jamfBaseDomain,
+		JamfProFQDN:          jamfProFQDN,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "oauth2",
 		httpExecutor:         executor,
@@ -23,10 +23,10 @@ func BuildWithOAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPerio
 }
 
 // BuildWithBasicAuth is a helper function allowing the full construct of a Jamf Integration using BasicAuth
-func BuildWithBasicAuth(jamfBaseDomain string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
+func BuildWithBasicAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
 
 	integration := Integration{
-		BaseDomain:           jamfBaseDomain,
+		JamfProFQDN:          jamfProFQDN,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "basic",
 		httpExecutor:         executor,
@@ -44,7 +44,7 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 		clientId:          clientId,
 		clientSecret:      clientSecret,
 		bufferPeriod:      bufferPeriod,
-		baseDomain:        j.BaseDomain,
+		baseDomain:        j.JamfProFQDN,
 		Sugar:             j.Sugar,
 		hideSensitiveData: hideSensitiveData,
 		httpExecutor:      executor,
@@ -60,7 +60,7 @@ func (j *Integration) BuildBasicAuth(username string, password string, bufferPer
 		password:          password,
 		bufferPeriod:      bufferPeriod,
 		Sugar:             j.Sugar,
-		baseDomain:        j.BaseDomain,
+		baseDomain:        j.JamfProFQDN,
 		hideSensitiveData: hideSensitiveData,
 		httpExecutor:      executor,
 	}
