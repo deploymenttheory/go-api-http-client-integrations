@@ -9,7 +9,7 @@ import (
 
 // JamfAPIHandler implements the APIHandler interface for the Jamf Pro API.
 type Integration struct {
-	BaseDomain           string
+	JamfProFQDN          string
 	AuthMethodDescriptor string
 	Sugar                *zap.SugaredLogger
 	auth                 authInterface
@@ -18,7 +18,7 @@ type Integration struct {
 
 // getFQDN returns just the FQDN // TODO remove the "get"
 func (j *Integration) GetFQDN() string {
-	return j.BaseDomain
+	return j.JamfProFQDN
 }
 
 // constructURL appends any endpoint to the FQDN

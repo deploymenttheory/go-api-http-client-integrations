@@ -92,7 +92,7 @@ func (a *oauth) getNewToken() error {
 	a.expiryTime = time.Now().Add(expiresIn)
 	a.token = oauthResp.AccessToken
 
-	a.Sugar.Info("Token obtained successfully", zap.Time("Expiry", a.expiryTime))
+	a.Sugar.Infow("Token obtained successfully", "expiry", a.expiryTime)
 	return nil
 }
 

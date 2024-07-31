@@ -10,7 +10,7 @@ import (
 
 func TestIntegration_marshalRequest(t *testing.T) {
 	type fields struct {
-		BaseDomain           string
+		jamfProFQDN          string
 		AuthMethodDescriptor string
 		Sugar                *zap.SugaredLogger
 		auth                 authInterface
@@ -33,7 +33,7 @@ func TestIntegration_marshalRequest(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			j := &Integration{
-				BaseDomain:           tt.fields.BaseDomain,
+				JamfProFQDN:          tt.fields.jamfProFQDN,
 				AuthMethodDescriptor: tt.fields.AuthMethodDescriptor,
 				Sugar:                tt.fields.Sugar,
 				auth:                 tt.fields.auth,
