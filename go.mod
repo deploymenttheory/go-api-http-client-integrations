@@ -3,7 +3,7 @@ module github.com/deploymenttheory/go-api-http-client-integrations
 go 1.22.4
 
 require (
-	github.com/deploymenttheory/go-api-http-client v0.2.9-0.20240729085958-f2cfa229bce4
+	github.com/deploymenttheory/go-api-http-client v0.2.9
 	go.uber.org/zap v1.27.0
 )
 
