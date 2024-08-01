@@ -34,7 +34,7 @@ import (
 //   - Logs the marshaled request body for POST, PUT, and PATCH methods using the integrated logger.
 //   - Logs an error if marshaling fails and returns the error.
 //   - Returns an error if the format is invalid.
-func (j *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+func (j *Integration) marshalRequest(body interface{}, _ string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
 		err  error
@@ -54,9 +54,9 @@ func (j *Integration) marshalRequest(body interface{}, method string, endpoint s
 			return nil, err
 		}
 
-		if method == "POST" || method == "PUT" {
-			j.Sugar.Debug("XML Request Body", zap.String("Body", string(data)))
-		}
+		// if method == "POST" || method == "PUT" {
+		// 	j.Sugar.Debug("XML Request Body", zap.String("Body", string(data)))
+		// }
 
 		return data, nil
 
