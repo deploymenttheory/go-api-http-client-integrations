@@ -23,6 +23,7 @@ import (
 //   - Adds an "Authorization" header with a Bearer token obtained from the Integration's auth.getTokenString method.
 func (j *Integration) prepRequest(req *http.Request) error {
 
+	j.Sugar.Debugw("LOG-CONTENT-TYPE", "METHOD", req.Method)
 	if req.Method != "READ" && req.Method != "DELETE" {
 		req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	}
