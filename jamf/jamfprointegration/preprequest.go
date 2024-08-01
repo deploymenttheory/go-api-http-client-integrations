@@ -22,8 +22,12 @@ import (
 //   - Checks and refreshes the token if necessary using the Integration's checkRefreshToken method.
 //   - Adds an "Authorization" header with a Bearer token obtained from the Integration's auth.getTokenString method.
 func (j *Integration) prepRequest(req *http.Request) error {
+
+	if req.Method != "READ" && req.Method != "DELETE" {
+		req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
+	}
+
 	req.Header.Add("Accept", j.getAcceptHeader())
-	req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
 
 	j.Sugar.Debug("request headers added, refreshing token")
@@ -37,8 +41,6 @@ func (j *Integration) prepRequest(req *http.Request) error {
 	j.Sugar.Debug("token refreshed, setting header")
 
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", j.auth.getTokenString()))
-
-	j.Sugar.Debug("header added")
 
 	return nil
 }
