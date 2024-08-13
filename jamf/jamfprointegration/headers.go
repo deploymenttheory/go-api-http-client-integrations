@@ -41,6 +41,10 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 		return "application/octet-stream"
 	}
 
+	if strings.Contains(endpoint, "icon") {
+		return "multipart/form-data"
+	}
+
 	if strings.Contains(endpoint, "/JSSResource") {
 		j.Sugar.Debugw("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
 		// TODO should this be application/xml or text/xml?
