@@ -35,6 +35,12 @@ const (
 func (j *Integration) getContentTypeHeader(endpoint string) string {
 	j.Sugar.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
 
+	// Set this header for PATCH requests on patch software title configurations
+	if strings.Contains(endpoint, "/api/v2/patch-software-title-configurations/") {
+		j.Sugar.Debugw("Content-Type for PATCH endpoint set to application/merge-patch+json", "endpoint", endpoint)
+		return "application/merge-patch+json"
+	}
+
 	// TODO change this contains to regex. We want to rule out malformed endpoints with multiple occurances.
 	if strings.Contains(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
 		j.Sugar.Debugw("Content-Type for packages upload endpoint set to application/octet-stream", "endpoint", endpoint)
@@ -47,7 +53,6 @@ func (j *Integration) getContentTypeHeader(endpoint string) string {
 
 	if strings.Contains(endpoint, "/JSSResource") {
 		j.Sugar.Debugw("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
-		// TODO should this be application/xml or text/xml?
 		return "application/xml"
 	}
 
