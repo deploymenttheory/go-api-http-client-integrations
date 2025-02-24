@@ -25,3 +25,5 @@ An API integration in this library typically includes the following components:
        - `clientId`, `clientSecret`, `username`, `password`, `jamfBaseDomain`, `bufferPeriod`
 
 4. **Shared Utilities**: Common utility functions that are common practise across multiple API integrations.
+
+dev/bob
