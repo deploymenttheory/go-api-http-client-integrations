@@ -86,7 +86,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 		}
 
 	}
-
+	j.Sugar.Debug("LOGHERE")
 	return &outList, nil
 
 }
