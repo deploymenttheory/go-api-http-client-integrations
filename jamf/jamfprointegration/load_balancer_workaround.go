@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"slices"
+	"time"
 )
 
 // GetSessionCookies retrieves all cookies from the current session
@@ -51,12 +52,16 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	var req *http.Request
 	var resp *http.Response
 
-	for i := 0; i < LoadBalancerPollCount; i++ {
+	startTimeEpoch := time.Now().Unix()
+	endTimeEpoch := startTimeEpoch + int64(LoadBalancerTimeOut.Seconds())
+
+	for i := time.Now().Unix(); i < endTimeEpoch; i++ {
 		req, err = http.NewRequest("GET", urlString, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error creating request: %v", err)
 		}
 
+		// Auth required on login screen or 404
 		err = j.PrepRequestParamsAndAuth(req)
 		if err != nil {
 			return nil, fmt.Errorf("error populating auth: %v", err)
@@ -75,10 +80,13 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 			}
 		}
 
+		cookieDupesRemoved := slices.Compact(outList)
+		if len(cookieDupesRemoved) > 1 {
+			break
+		}
+
 	}
 
-	slices.Sort(outList)
-	newList := slices.Compact(outList)
-	return &newList, nil
+	return &outList, nil
 
 }
