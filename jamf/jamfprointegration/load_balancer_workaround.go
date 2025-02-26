@@ -54,14 +54,16 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	var err error
 	var req *http.Request
 	var resp *http.Response
+	var iterations int
 
+	iterations = 0
 	startTimeEpoch := time.Now().Unix()
 	j.Sugar.Debugf("Start time: %d", startTimeEpoch)
 	endTimeEpoch := startTimeEpoch + int64(LoadBalancerTimeOut.Seconds())
 	j.Sugar.Debugf("End Time: %d", endTimeEpoch)
 
-	for i := time.Now().Unix(); i < endTimeEpoch; i++ {
-		j.Sugar.Debugf("####################################")
+	for i := time.Now().Unix(); i < endTimeEpoch; {
+		j.Sugar.Debugf("################Iterations:%v####################", iterations)
 		req, err = http.NewRequest("GET", urlString, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error creating request: %v", err)
@@ -96,7 +98,9 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 			j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
 			break
 		}
-
+		
+		i = time.Now().Unix()
+		iterations += 1
 	}
 	return &outList, nil
 
