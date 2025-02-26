@@ -92,12 +92,25 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 			}
 		}
 		j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
-		cookieDupesRemoved := slices.Compact(outList)
+		
+		uniqueMap := make(map[string]bool)
+	
+		for _, str := range outList {
+			uniqueMap[str] = true
+		}
+		
+		cookieDupesRemoved := make([]string, 0, len(uniqueMap))
+		
+		for str := range uniqueMap {
+			cookieDupesRemoved = append(cookieDupesRemoved, str)
+		}
+
+
 		j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
-		// if len(cookieDupesRemoved) > 1 { 
-		// 	j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
-		// 	break
-		// }
+		if len(cookieDupesRemoved) > 1 { 
+			j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
+			break
+		}
 
 		i = time.Now().Unix()
 		iterations += 1
