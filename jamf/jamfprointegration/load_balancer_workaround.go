@@ -47,7 +47,7 @@ func chooseMostAlphabeticalString(strings []string) string {
 
 // TODO migrate strings
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
-	j.Sugar.Debug("LOGHERE")
+	j.Sugar.Debug("LOGHERE1")
 	j.Sugar.Debug("Starting cookie magic")
 	var outList []string
 	var err error
