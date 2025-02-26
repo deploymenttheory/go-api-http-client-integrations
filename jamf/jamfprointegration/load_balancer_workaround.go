@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"slices"
 	"time"
+	"strings"
 )
 
 // GetSessionCookies retrieves all cookies from the current session
@@ -81,14 +82,15 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
-				j.Sugar.Debugf("Appending: %v", v.Value)
-				outList = append(outList, v.Value)
+				strippedCookie:= strings.TrimSpace(v.Value)
+				j.Sugar.Debugf("Appending: %v", strippedCookie)
+				outList = append(outList, strippedCookie)
 			}
 		}
 		j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
 		cookieDupesRemoved := slices.Compact(outList)
 		j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
-		if len(cookieDupesRemoved) > 1 {
+		if len(cookieDupesRemoved) > 1 { 
 			break
 		}
 
