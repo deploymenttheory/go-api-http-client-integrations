@@ -94,11 +94,11 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 		j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
 		cookieDupesRemoved := slices.Compact(outList)
 		j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
-		if len(cookieDupesRemoved) > 1 { 
-			j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
-			break
-		}
-		
+		// if len(cookieDupesRemoved) > 1 { 
+		// 	j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
+		// 	break
+		// }
+
 		i = time.Now().Unix()
 		iterations += 1
 	}
