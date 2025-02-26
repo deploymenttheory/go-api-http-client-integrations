@@ -26,6 +26,7 @@ func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	}
 
 	chosenCookie := chooseMostAlphabeticalString(*allBalancers)
+	j.Sugar.Debugf("Chosen Cookie:%v ", chosenCookie)
 	return chosenCookie, nil
 }
 
@@ -47,7 +48,7 @@ func chooseMostAlphabeticalString(strings []string) string {
 
 // TODO migrate strings
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
-	j.Sugar.Debug("LOGHERE1")
+	// j.Sugar.Debug("LOGHERE1")
 	j.Sugar.Debug("Starting cookie magic")
 	var outList []string
 	var err error
@@ -57,12 +58,12 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 	iterations = 0
 	startTimeEpoch := time.Now().Unix()
-	j.Sugar.Debugf("Start time: %d", startTimeEpoch)
+	// j.Sugar.Debugf("Start time: %d", startTimeEpoch)
 	endTimeEpoch := startTimeEpoch + int64(LoadBalancerTimeOut.Seconds())
-	j.Sugar.Debugf("End Time: %d", endTimeEpoch)
+	// j.Sugar.Debugf("End Time: %d", endTimeEpoch)
 
 	for i := time.Now().Unix(); i < endTimeEpoch; {
-		j.Sugar.Debugf("################Iterations:%v####################", iterations)
+		// j.Sugar.Debugf("################Iterations:%v####################", iterations)
 		req, err = http.NewRequest("GET", urlString, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error creating request: %v", err)
@@ -80,17 +81,17 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 		}
 
 		respCookies := resp.Cookies()
-		j.Sugar.Debugf("Cookies got: %+v", respCookies)
+		// j.Sugar.Debugf("Cookies got: %+v", respCookies)
 
 		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
 				strippedCookie := strings.TrimSpace(v.Value)
-				j.Sugar.Debugf("Removing Whitespace. Before #%v# After #%v#", v.Value, strippedCookie)
-				j.Sugar.Debugf("Appending: %v", strippedCookie)
+				// j.Sugar.Debugf("Removing Whitespace. Before #%v# After #%v#", v.Value, strippedCookie)
+				// j.Sugar.Debugf("Appending: %v", strippedCookie)
 				outList = append(outList, strippedCookie)
 			}
 		}
-		j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
+		// j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
 		
 		uniqueMap := make(map[string]bool)
 	
@@ -105,9 +106,9 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 		}
 
 
-		j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
+		// j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
 		if len(cookieDupesRemoved) > 1 { 
-			j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
+			// j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ###")
 			break
 		}
 
