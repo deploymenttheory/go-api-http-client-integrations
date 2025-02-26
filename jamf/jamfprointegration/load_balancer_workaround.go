@@ -83,6 +83,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
 				strippedCookie:= strings.TrimSpace(v.Value)
+				j.Sugar.Debugf("Removing Whitespace. Before #%v# After #%v#", v.Value, strippedCookie)
 				j.Sugar.Debugf("Appending: %v", strippedCookie)
 				outList = append(outList, strippedCookie)
 			}
