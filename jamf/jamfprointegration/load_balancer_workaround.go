@@ -57,7 +57,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	startTimeEpoch := time.Now().Unix()
 	j.Sugar.Debugf("Start time: %d", startTimeEpoch)
 	endTimeEpoch := startTimeEpoch + int64(LoadBalancerTimeOut.Seconds())
-	j.Sugar.Debug("End Time: %d", endTimeEpoch)
+	j.Sugar.Debugf("End Time: %d", endTimeEpoch)
 
 	for i := time.Now().Unix(); i < endTimeEpoch; i++ {
 		req, err = http.NewRequest("GET", urlString, nil)
@@ -81,19 +81,18 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
-				j.Sugar.Debug("Appending: %v", v.Value)
+				j.Sugar.Debugf("Appending: %v", v.Value)
 				outList = append(outList, v.Value)
 			}
 		}
-
+		j.Sugar.Debugf("BEGIN DUPE REMOVAL. OUTLIST: %v", outList)
 		cookieDupesRemoved := slices.Compact(outList)
+		j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
 		if len(cookieDupesRemoved) > 1 {
-			j.Sugar.Debugf("%v", cookieDupesRemoved)
 			break
 		}
 
 	}
-
 	return &outList, nil
 
 }
