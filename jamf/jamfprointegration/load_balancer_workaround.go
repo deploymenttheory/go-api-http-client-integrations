@@ -61,6 +61,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	j.Sugar.Debugf("End Time: %d", endTimeEpoch)
 
 	for i := time.Now().Unix(); i < endTimeEpoch; i++ {
+		j.Sugar.Debugf("####################################")
 		req, err = http.NewRequest("GET", urlString, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error creating request: %v", err)
