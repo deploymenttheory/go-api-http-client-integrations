@@ -49,7 +49,7 @@ func chooseMostAlphabeticalString(strings []string) string {
 // TODO migrate strings
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 	// j.Sugar.Debug("LOGHERE1")
-	j.Sugar.Debug("Starting cookie magic")
+	j.Sugar.Debug("Starting cookie magic (has this propogated?)")
 	var outList []string
 	var err error
 	var req *http.Request
@@ -107,8 +107,9 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 
 		// j.Sugar.Debugf("DUPES REMOVED: %v", cookieDupesRemoved)
+		j.Sugar.Debugf("Cookie magic loop")
 		if len(cookieDupesRemoved) > 1 { 
-			// j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ### Dupes removed: %v, outlist: %v", cookieDupesRemoved, outList)
+			j.Sugar.Debugf("### COMPLETED COOKIE MAGIC ### Dupes removed: %v, outlist: %v", cookieDupesRemoved, outList)
 			break
 		}
 
