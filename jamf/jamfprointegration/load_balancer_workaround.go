@@ -3,7 +3,6 @@ package jamfprointegration
 import (
 	"fmt"
 	"net/http"
-	"slices"
 	"time"
 	"strings"
 )
