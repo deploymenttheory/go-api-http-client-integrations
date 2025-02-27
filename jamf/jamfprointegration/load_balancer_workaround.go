@@ -26,6 +26,7 @@ func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	}
 
 	chosenCookie := chooseMostAlphabeticalString(*allBalancers)
+	chosenCookie = "9a794a6f22fea3b1"
 	j.Sugar.Debugf("Chosen Cookie:%v ", chosenCookie)
 	return chosenCookie, nil
 }
