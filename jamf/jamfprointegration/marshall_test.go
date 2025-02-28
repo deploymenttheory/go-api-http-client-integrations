@@ -1,10 +1,10 @@
 package jamfprointegration
 
 import (
+	"net/http"
 	"reflect"
 	"testing"
 
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -14,7 +14,7 @@ func TestIntegration_marshalRequest(t *testing.T) {
 		AuthMethodDescriptor string
 		Sugar                *zap.SugaredLogger
 		auth                 authInterface
-		httpExecutor         httpclient.HTTPExecutor
+		http                 http.Client
 	}
 	type args struct {
 		body     interface{}
@@ -37,7 +37,7 @@ func TestIntegration_marshalRequest(t *testing.T) {
 				AuthMethodDescriptor: tt.fields.AuthMethodDescriptor,
 				Sugar:                tt.fields.Sugar,
 				auth:                 tt.fields.auth,
-				httpExecutor:         tt.fields.httpExecutor,
+				http:                 tt.fields.http,
 			}
 			got, err := j.marshalRequest(tt.args.body, tt.args.method, tt.args.endpoint)
 			if (err != nil) != tt.wantErr {

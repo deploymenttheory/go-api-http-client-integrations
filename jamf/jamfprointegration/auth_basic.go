@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +19,7 @@ type basicAuth struct {
 	hideSensitiveData     bool
 	bearerToken           string
 	bearerTokenExpiryTime time.Time
-	httpExecutor          httpclient.HTTPExecutor
+	http                  http.Client
 }
 
 // basicAuthResponse serves as a json structure map for the basicAuth response from Jamf.
@@ -58,7 +57,7 @@ func (a *basicAuth) getNewToken() error {
 
 	req.SetBasicAuth(a.username, a.password)
 
-	resp, err := a.httpExecutor.Do(req)
+	resp, err := a.http.Do(req)
 	if err != nil {
 		return err
 	}

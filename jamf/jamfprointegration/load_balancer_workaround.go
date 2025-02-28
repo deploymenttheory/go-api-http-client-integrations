@@ -62,7 +62,7 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 			return nil, fmt.Errorf("error populating auth: %v", err)
 		}
 
-		resp, err = j.httpExecutor.Do(req)
+		resp, err = j.http.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("error sending req: %v", err)
 		}

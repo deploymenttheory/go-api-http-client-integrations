@@ -1,45 +1,45 @@
 package jamfprointegration
 
 import (
+	"net/http"
 	"time"
 
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
 // BuildWithOAuth is a helper function allowing the full construct of a Jamf Integration using OAuth2
-func BuildWithOAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
+func BuildWithOAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, hideSensitiveData bool, client http.Client) (*Integration, error) {
 	integration := Integration{
 		JamfProFQDN:          jamfProFQDN,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "oauth2",
-		httpExecutor:         executor,
+		http:                 client,
 	}
 
-	integration.BuildOAuth(clientId, clientSecret, bufferPeriod, hideSensitiveData, executor)
+	integration.BuildOAuth(clientId, clientSecret, bufferPeriod, hideSensitiveData, client)
 	err := integration.CheckRefreshToken()
 
 	return &integration, err
 }
 
 // BuildWithBasicAuth is a helper function allowing the full construct of a Jamf Integration using BasicAuth
-func BuildWithBasicAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, hideSensitiveData bool, executor httpclient.HTTPExecutor) (*Integration, error) {
+func BuildWithBasicAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, username string, password string, hideSensitiveData bool, client http.Client) (*Integration, error) {
 
 	integration := Integration{
 		JamfProFQDN:          jamfProFQDN,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "basic",
-		httpExecutor:         executor,
+		http:                 client,
 	}
 
-	integration.BuildBasicAuth(username, password, bufferPeriod, hideSensitiveData, executor)
+	integration.BuildBasicAuth(username, password, bufferPeriod, hideSensitiveData, client)
 	err := integration.CheckRefreshToken()
 
 	return &integration, err
 }
 
 // BuildOAuth is a helper which returns just a configured OAuth interface
-func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration, hideSensitiveData bool, executor httpclient.HTTPExecutor) {
+func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPeriod time.Duration, hideSensitiveData bool, client http.Client) {
 	authInterface := oauth{
 		clientId:          clientId,
 		clientSecret:      clientSecret,
@@ -47,14 +47,14 @@ func (j *Integration) BuildOAuth(clientId string, clientSecret string, bufferPer
 		baseDomain:        j.JamfProFQDN,
 		Sugar:             j.Sugar,
 		hideSensitiveData: hideSensitiveData,
-		httpExecutor:      executor,
+		http:              client,
 	}
 
 	j.auth = &authInterface
 }
 
 // BuildBasicAuth is a helper which returns just a configured Basic Auth interface/
-func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration, hideSensitiveData bool, executor httpclient.HTTPExecutor) {
+func (j *Integration) BuildBasicAuth(username string, password string, bufferPeriod time.Duration, hideSensitiveData bool, client http.Client) {
 	authInterface := basicAuth{
 		username:          username,
 		password:          password,
@@ -62,7 +62,7 @@ func (j *Integration) BuildBasicAuth(username string, password string, bufferPer
 		Sugar:             j.Sugar,
 		baseDomain:        j.JamfProFQDN,
 		hideSensitiveData: hideSensitiveData,
-		httpExecutor:      executor,
+		http:              client,
 	}
 
 	j.auth = &authInterface
