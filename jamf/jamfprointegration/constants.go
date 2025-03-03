@@ -1,5 +1,7 @@
 package jamfprointegration
 
+import "time"
+
 // Endpoint constants represent the URL suffixes used for Jamf API token interactions.
 const (
 	// Auth
@@ -11,4 +13,6 @@ const (
 	// Load balancer workaround
 	LoadBalancerTargetCookie string = "jpro-ingress"
 	LoadBalancerPollCount    int    = 5
+	LoadBalancerTimeOut      time.Duration = 7 * time.Second
+
 )
