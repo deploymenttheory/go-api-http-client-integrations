@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client-integrations/jamf/jamfprointegration"
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -31,7 +30,7 @@ func NewIntegrationFromEnv() *jamfprointegration.Integration {
 		os.Getenv(ENV_KEY_CLIENT_ID),
 		os.Getenv(ENV_KEY_CLIENT_SECRET),
 		false,
-		&httpclient.ProdExecutor{Client: &http.Client{}},
+		http.Client{},
 	)
 
 	if err != nil {

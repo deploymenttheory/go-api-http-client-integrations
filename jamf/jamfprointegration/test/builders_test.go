@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/deploymenttheory/go-api-http-client-integrations/jamf/jamfprointegration"
-	"github.com/deploymenttheory/go-api-http-client/httpclient"
 	"go.uber.org/zap"
 )
 
@@ -23,7 +22,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 		clientId          string
 		clientSecret      string
 		hideSensitiveData bool
-		executor          httpclient.HTTPExecutor
+		http              http.Client
 	}
 	tests := []struct {
 		name    string
@@ -39,7 +38,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				clientSecret:      os.Getenv(ENV_KEY_CLIENT_SECRET),
 				bufferPeriod:      10 * time.Second,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				http:              http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: false,
@@ -52,7 +51,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				clientSecret:      os.Getenv(ENV_KEY_CLIENT_SECRET),
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				http:              http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,
@@ -65,7 +64,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				clientSecret:      os.Getenv(ENV_KEY_CLIENT_SECRET),
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				http:              http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,
@@ -78,7 +77,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 				clientSecret:      "",
 				bufferPeriod:      10 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				http:              http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,
@@ -86,7 +85,7 @@ func Test_BuildWithOAuth(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := jamfprointegration.BuildWithOAuth(tt.args.jamfProFQDN, tt.args.Sugar, tt.args.bufferPeriod, tt.args.clientId, tt.args.clientSecret, tt.args.hideSensitiveData, tt.args.executor)
+			_, err := jamfprointegration.BuildWithOAuth(tt.args.jamfProFQDN, tt.args.Sugar, tt.args.bufferPeriod, tt.args.clientId, tt.args.clientSecret, tt.args.hideSensitiveData, tt.args.http)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("BuildWithOAuth() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -105,7 +104,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 		username          string
 		password          string
 		hideSensitiveData bool
-		executor          httpclient.HTTPExecutor
+		executor          http.Client
 	}
 	tests := []struct {
 		name    string
@@ -121,7 +120,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				password:          os.Getenv(ENV_KEY_PASSWORD),
 				bufferPeriod:      10 * time.Second,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				executor:          http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: false,
@@ -134,7 +133,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				password:          os.Getenv(ENV_KEY_PASSWORD),
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				executor:          http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,
@@ -147,7 +146,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				password:          os.Getenv(ENV_KEY_PASSWORD),
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				executor:          http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,
@@ -160,7 +159,7 @@ func TestBuildWithBasicAuth(t *testing.T) {
 				password:          "",
 				bufferPeriod:      100 * time.Minute,
 				hideSensitiveData: true,
-				executor:          &httpclient.ProdExecutor{Client: &http.Client{}},
+				executor:          http.Client{},
 				Sugar:             logger,
 			},
 			wantErr: true,

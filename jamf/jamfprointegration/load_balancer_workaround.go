@@ -3,7 +3,8 @@ package jamfprointegration
 import (
 	"fmt"
 	"net/http"
-	"slices"
+	"strings"
+	"time"
 )
 
 // GetSessionCookies retrieves all cookies from the current session
@@ -25,6 +26,7 @@ func (j *Integration) GetLoadBalancer(urlString string) (string, error) {
 	}
 
 	chosenCookie := chooseMostAlphabeticalString(*allBalancers)
+	j.Sugar.Debugf("Chosen Cookie:%v ", chosenCookie)
 	return chosenCookie, nil
 }
 
@@ -46,23 +48,30 @@ func chooseMostAlphabeticalString(strings []string) string {
 
 // TODO migrate strings
 func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
+	j.Sugar.Debug("Starting load balancer workaround")
 	var outList []string
 	var err error
 	var req *http.Request
 	var resp *http.Response
+	var iterations int
 
-	for i := 0; i < LoadBalancerPollCount; i++ {
+	iterations = 0
+	startTimeEpoch := time.Now().Unix()
+	endTimeEpoch := startTimeEpoch + int64(LoadBalancerTimeOut.Seconds())
+
+	for i := time.Now().Unix(); i < endTimeEpoch; {
 		req, err = http.NewRequest("GET", urlString, nil)
 		if err != nil {
 			return nil, fmt.Errorf("error creating request: %v", err)
 		}
 
+		// Auth required on login screen or 404
 		err = j.PrepRequestParamsAndAuth(req)
 		if err != nil {
 			return nil, fmt.Errorf("error populating auth: %v", err)
 		}
 
-		resp, err = j.httpExecutor.Do(req)
+		resp, err = j.http.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("error sending req: %v", err)
 		}
@@ -71,14 +80,31 @@ func (j *Integration) getAllLoadBalancers(urlString string) (*[]string, error) {
 
 		for _, v := range respCookies {
 			if v.Name == LoadBalancerTargetCookie {
-				outList = append(outList, v.Value)
+				strippedCookie := strings.TrimSpace(v.Value)
+				outList = append(outList, strippedCookie)
 			}
 		}
 
-	}
+		uniqueMap := make(map[string]bool)
 
-	slices.Sort(outList)
-	newList := slices.Compact(outList)
-	return &newList, nil
+		for _, str := range outList {
+			uniqueMap[str] = true
+		}
+
+		cookieDupesRemoved := make([]string, 0, len(uniqueMap))
+
+		for str := range uniqueMap {
+			cookieDupesRemoved = append(cookieDupesRemoved, str)
+		}
+
+		if len(cookieDupesRemoved) > 1 {
+			j.Sugar.Debugf("### COMPLETED LOADBALANCER WORKAROUND ### Dupes removed: %v, outlist: %v", cookieDupesRemoved, outList)
+			break
+		}
+
+		i = time.Now().Unix()
+		iterations += 1
+	}
+	return &outList, nil
 
 }
