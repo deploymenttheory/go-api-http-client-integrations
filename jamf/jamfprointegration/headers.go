@@ -32,8 +32,19 @@ const (
 // - For URL endpoints starting with "/api", it defaults to "application/json" for the JamfPro API.
 // If the endpoint does not match any of the predefined patterns, "application/json" is used as a fallback.
 // This method logs the decision process at various stages for debugging purposes.
-func (j *Integration) getContentTypeHeader(endpoint string) string {
-	j.Sugar.Debug("Determining Content-Type for endpoint", zap.String("endpoint", endpoint))
+func (j *Integration) getContentTypeHeader(endpoint string, method string) string {
+	j.Sugar.Debug("Determining Content-Type for endpoint",
+		zap.String("endpoint", endpoint),
+		zap.String("method", method))
+
+	// Set this header for all PATCH requests
+	// https://developer.jamf.com/developer-guide/docs/api-style-guide#methods
+	if method == "PATCH" {
+		j.Sugar.Debugw("Content-Type for PATCH request set to application/merge-patch+json",
+			"endpoint", endpoint,
+			"method", method)
+		return "application/merge-patch+json"
+	}
 
 	// Set this header for PATCH requests on patch software title configurations
 	if strings.Contains(endpoint, "/api/v2/patch-software-title-configurations/") {
