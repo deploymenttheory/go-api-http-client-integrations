@@ -46,12 +46,6 @@ func (j *Integration) getContentTypeHeader(endpoint string, method string) strin
 		return "application/merge-patch+json"
 	}
 
-	// Set this header for PATCH requests on patch software title configurations
-	if strings.Contains(endpoint, "/api/v2/patch-software-title-configurations/") {
-		j.Sugar.Debugw("Content-Type for PATCH endpoint set to application/merge-patch+json", "endpoint", endpoint)
-		return "application/merge-patch+json"
-	}
-
 	// TODO change this contains to regex. We want to rule out malformed endpoints with multiple occurances.
 	if strings.Contains(endpoint, "/api/v1/packages/") && strings.Contains(endpoint, "/upload") {
 		j.Sugar.Debugw("Content-Type for packages upload endpoint set to application/octet-stream", "endpoint", endpoint)
