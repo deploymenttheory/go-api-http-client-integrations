@@ -25,7 +25,7 @@ func (j *Integration) prepRequest(req *http.Request) error {
 
 	j.Sugar.Debugw("LOG-CONTENT-TYPE", "METHOD", req.Method, "URL", req.URL.String())
 	if req.Method != "GET" && req.Method != "DELETE" {
-		req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String()))
+		req.Header.Add("Content-Type", j.getContentTypeHeader(req.URL.String(), req.Method))
 	}
 
 	req.Header.Add("Accept", j.getAcceptHeader())
