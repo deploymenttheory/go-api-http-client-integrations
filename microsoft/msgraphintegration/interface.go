@@ -74,7 +74,7 @@ func (m *Integration) PrepRequestParamsAndAuth(req *http.Request) error {
 // Returns:
 //   - []byte: The marshaled JSON byte slice of the request body.
 //   - error: Any error encountered during the marshaling process.
-func (m *Integration) PrepRequestBody(body interface{}, method string, endpoint string) ([]byte, error) {
+func (m *Integration) PrepRequestBody(body any, method string, endpoint string) ([]byte, error) {
 	return m.marshalRequest(body, method, endpoint)
 }
 

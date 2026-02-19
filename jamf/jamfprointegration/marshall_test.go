@@ -17,7 +17,7 @@ func TestIntegration_marshalRequest(t *testing.T) {
 		http                 http.Client
 	}
 	type args struct {
-		body     interface{}
+		body     any
 		method   string
 		endpoint string
 	}

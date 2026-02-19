@@ -41,7 +41,7 @@ func (j *Integration) PrepRequestParamsAndAuth(req *http.Request) error {
 }
 
 // PrepRequestBody formats body data to meet the API requirements.
-func (j *Integration) PrepRequestBody(body interface{}, method string, endpoint string) ([]byte, error) {
+func (j *Integration) PrepRequestBody(body any, method string, endpoint string) ([]byte, error) {
 	return j.marshalRequest(body, method, endpoint)
 }
 

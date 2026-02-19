@@ -20,13 +20,13 @@ var methodsWithBody = map[string]bool{
 }
 
 // MarshalRequest encodes the request body as JSON for the Microsoft Graph API.
-// This function takes an interface{} type body, an HTTP method, and an endpoint as input,
+// This function takes an any type body, an HTTP method, and an endpoint as input,
 // and returns the marshaled JSON byte slice along with any error encountered during marshaling.
 // The function ensures that the request body is always marshaled as JSON.
 // It logs the JSON request body for POST, PUT, and PATCH methods using the integrated logger.
 //
 // Parameters:
-//   - body: The request body to be marshaled, of type interface{}.
+//   - body: The request body to be marshaled, of type any.
 //   - method: The HTTP method being used for the request (e.g., "POST", "PUT", "PATCH").
 //   - endpoint: The API endpoint for the request.
 //
@@ -39,7 +39,7 @@ var methodsWithBody = map[string]bool{
 //   - Logs the JSON request body for POST, PUT, and PATCH methods.
 //
 // Set of methods that require logging the request body
-func (m *Integration) marshalRequest(body interface{}, method string, endpoint string) ([]byte, error) {
+func (m *Integration) marshalRequest(body any, method string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
 		err  error

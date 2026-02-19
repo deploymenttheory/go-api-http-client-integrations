@@ -16,11 +16,11 @@ import (
 
 // MarshalRequest encodes the request body according to the endpoint for the Jamf Pro API.
 // This function marshals the request body as JSON or XML based on the endpoint string.
-// It takes an interface{} type body, an HTTP method, and an endpoint as input, and returns the
+// It takes an any type body, an HTTP method, and an endpoint as input, and returns the
 // marshaled byte slice along with any error encountered during marshaling.
 //
 // Parameters:
-//   - body: The request body to be marshaled, of type interface{}.
+//   - body: The request body to be marshaled, of type any.
 //   - method: The HTTP method being used for the request (e.g., "POST", "PUT", "PATCH").
 //   - endpoint: The API endpoint for the request.
 //
@@ -34,7 +34,7 @@ import (
 //   - Logs the marshaled request body for POST, PUT, and PATCH methods using the integrated logger.
 //   - Logs an error if marshaling fails and returns the error.
 //   - Returns an error if the format is invalid.
-func (j *Integration) marshalRequest(body interface{}, _ string, endpoint string) ([]byte, error) {
+func (j *Integration) marshalRequest(body any, _ string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
 		err  error
