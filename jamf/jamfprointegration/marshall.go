@@ -41,7 +41,7 @@ func (j *Integration) marshalRequest(body any, _ string, endpoint string) ([]byt
 	)
 
 	format := "json"
-	if strings.Contains(endpoint, "/JSSResource") {
+	if strings.Contains(endpoint, "/JSSResource") || strings.Contains(endpoint, "/api/proclassic") {
 		format = "xml"
 	} else if strings.Contains(endpoint, "/api") {
 		format = "json"

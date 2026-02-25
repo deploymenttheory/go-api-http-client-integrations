@@ -2,6 +2,7 @@ package jamfprointegration
 
 import (
 	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 )
@@ -13,6 +14,7 @@ type Integration struct {
 	Sugar                *zap.SugaredLogger
 	auth                 authInterface
 	http                 http.Client
+	TenantID             string // Jamf Pro instance UUID (required for platform gateway auth)
 }
 
 // getFQDN returns just the FQDN // TODO remove the "get"
@@ -20,9 +22,27 @@ func (j *Integration) GetFQDN() string {
 	return j.JamfProFQDN
 }
 
-// constructURL appends any endpoint to the FQDN
+// constructURL appends any endpoint to the FQDN, rewriting paths when in gateway mode.
 func (j *Integration) ConstructURL(endpoint string) string {
+	if j.AuthMethodDescriptor == "platform" {
+		endpoint = j.rewriteEndpointForGateway(endpoint)
+	}
 	return j.GetFQDN() + endpoint
+}
+
+// rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths.
+//   - /JSSResource/... to /api/proclassic/...
+//   - /api/v{x}/...    to /api/pro/v{x}/...
+func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
+	if strings.HasPrefix(endpoint, "/JSSResource") {
+		return strings.Replace(endpoint, "/JSSResource", "/api/proclassic", 1)
+	}
+
+	if strings.HasPrefix(endpoint, "/api/v") {
+		return "/api/pro" + endpoint[len("/api"):]
+	}
+
+	return endpoint
 }
 
 // GetAuthMethodDescriptor returns a single string describing the auth method for debug and logging purposes

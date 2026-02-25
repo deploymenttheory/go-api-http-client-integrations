@@ -31,6 +31,10 @@ func (j *Integration) prepRequest(req *http.Request) error {
 	req.Header.Add("Accept", j.getAcceptHeader())
 	req.Header.Add("User-Agent", j.getUserAgentHeader())
 
+	if j.AuthMethodDescriptor == "platform" && j.TenantID != "" {
+		req.Header.Add("X-Tenant-Id", j.TenantID)
+	}
+
 	j.Sugar.Debug("request headers added, refreshing token")
 
 	err := j.checkRefreshToken()
