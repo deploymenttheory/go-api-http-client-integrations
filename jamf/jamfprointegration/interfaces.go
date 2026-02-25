@@ -1,6 +1,7 @@
 package jamfprointegration
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -30,16 +31,17 @@ func (j *Integration) ConstructURL(endpoint string) string {
 	return j.GetFQDN() + endpoint
 }
 
-// rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths.
-//   - /JSSResource/... to /api/proclassic/...
-//   - /api/v{x}/...    to /api/pro/v{x}/...
+// rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths
+// with the tenant ID embedded in the URL path.
+//   - /JSSResource/... → /api/proclassic/tenant/{id}/...
+//   - /api/v{x}/...    → /api/pro/tenant/{id}/v{x}/...
 func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
 	if strings.HasPrefix(endpoint, "/JSSResource") {
-		return strings.Replace(endpoint, "/JSSResource", "/api/proclassic", 1)
+		return fmt.Sprintf("/api/proclassic/tenant/%s%s", j.TenantID, endpoint[len("/JSSResource"):])
 	}
 
 	if strings.HasPrefix(endpoint, "/api/v") {
-		return "/api/pro" + endpoint[len("/api"):]
+		return fmt.Sprintf("/api/pro/tenant/%s%s", j.TenantID, endpoint[len("/api"):])
 	}
 
 	return endpoint
