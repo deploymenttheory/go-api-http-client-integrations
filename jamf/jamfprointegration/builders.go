@@ -40,14 +40,14 @@ func BuildWithBasicAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeri
 
 // BuildWithPlatformGatewayOAuth constructs a Jamf Integration using the platform gateway OAuth2 flow.
 // The gateway URL becomes the base FQDN, and all API paths are rewritten transparently.
-func BuildWithPlatformGatewayOAuth(gatewayURL string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, scope string, scopeID string, hideSensitiveData bool, client http.Client) (*Integration, error) {
+// The tenantID is the UUID identifying the target Jamf Pro tenant on the platform.
+func BuildWithPlatformGatewayOAuth(gatewayURL string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string, hideSensitiveData bool, client http.Client) (*Integration, error) {
 	integration := Integration{
 		JamfProFQDN:          gatewayURL,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "platform",
 		http:                 client,
-		Scope:                scope,
-		ScopeID:              scopeID,
+		TenantID:             tenantID,
 	}
 
 	integration.BuildPlatformOAuth(clientId, clientSecret, bufferPeriod, hideSensitiveData, client, gatewayURL)

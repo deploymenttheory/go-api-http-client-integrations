@@ -15,8 +15,7 @@ type Integration struct {
 	Sugar                *zap.SugaredLogger
 	auth                 authInterface
 	http                 http.Client
-	Scope                string
-	ScopeID              string
+	TenantID             string
 }
 
 // GetFQDN returns the base FQDN.
@@ -32,17 +31,18 @@ func (j *Integration) ConstructURL(endpoint string) string {
 	return j.GetFQDN() + endpoint
 }
 
-// rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths
-// with the scope and scope ID embedded in the URL path.
-//   /JSSResource/...  to  /api/proclassic/{scope}/{scope_id}/...
-//   /api/v{x}/...     to  /api/pro/{scope}/{scope_id}/v{x}/...
+// rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths.
+// The scope type is always "tenant" for Jamf Classic/Pro APIs under the platform gateway.
+//
+//	/JSSResource/...  →  /api/proclassic/tenant/{tenantID}/...
+//	/api/v{x}/...     →  /api/pro/tenant/{tenantID}/v{x}/...
 func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
 	if strings.HasPrefix(endpoint, "/JSSResource") {
-		return fmt.Sprintf("/api/proclassic/%s/%s%s", j.Scope, j.ScopeID, endpoint[len("/JSSResource"):])
+		return fmt.Sprintf("/api/proclassic/tenant/%s%s", j.TenantID, endpoint[len("/JSSResource"):])
 	}
 
 	if strings.HasPrefix(endpoint, "/api/v") {
-		return fmt.Sprintf("/api/pro/%s/%s%s", j.Scope, j.ScopeID, endpoint[len("/api"):])
+		return fmt.Sprintf("/api/pro/tenant/%s%s", j.TenantID, endpoint[len("/api"):])
 	}
 
 	return endpoint
