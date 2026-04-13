@@ -35,14 +35,21 @@ func (j *Integration) ConstructURL(endpoint string) string {
 // The scope type is always "tenant" for Jamf Classic/Pro APIs under the platform gateway.
 //
 //	/JSSResource/...  →  /api/proclassic/tenant/{tenantID}/...
-//	/api/v{x}/...     →  /api/pro/tenant/{tenantID}/v{x}/...
+//	/api/v{x}/...     →  /api/pro/v{x}/tenant/{tenantID}/...
 func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
 	if strings.HasPrefix(endpoint, "/JSSResource") {
 		return fmt.Sprintf("/api/proclassic/tenant/%s%s", j.TenantID, endpoint[len("/JSSResource"):])
 	}
 
 	if strings.HasPrefix(endpoint, "/api/v") {
-		return fmt.Sprintf("/api/pro/tenant/%s%s", j.TenantID, endpoint[len("/api"):])
+		rest := endpoint[len("/api/"):]
+		slashIdx := strings.Index(rest, "/")
+		if slashIdx == -1 {
+			return fmt.Sprintf("/api/pro/%s/tenant/%s", rest, j.TenantID)
+		}
+		version := rest[:slashIdx]
+		remainder := rest[slashIdx:]
+		return fmt.Sprintf("/api/pro/%s/tenant/%s%s", version, j.TenantID, remainder)
 	}
 
 	return endpoint
