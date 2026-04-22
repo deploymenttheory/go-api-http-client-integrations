@@ -56,7 +56,7 @@ func (j *Integration) getContentTypeHeader(endpoint string, method string) strin
 		return "multipart/form-data"
 	}
 
-	if strings.Contains(endpoint, "/JSSResource") {
+	if strings.Contains(endpoint, "/JSSResource") || strings.Contains(endpoint, "/api/proclassic") {
 		j.Sugar.Debugw("Content-Type for endpoint defaulting to XML for Classic API", "endpoint", endpoint)
 		return "application/xml"
 	}

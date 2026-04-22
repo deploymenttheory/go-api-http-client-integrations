@@ -7,8 +7,9 @@ This library provides a collection of API integrations utilized by by the [go-ap
 An API integration in this library typically includes the following components:
 
 1. **Authentication Methods**:
-   - **OAuth2.0**: Implements client credentials flow.
+   - **OAuth2.0**: Implements client credentials flow for direct Jamf Pro instance access.
    - **Basic Authentication**: Uses username and password.
+   - **Platform Gateway OAuth2**: Implements client credentials flow via the Jamf platform gateway, with automatic API path rewriting for tenant-scoped access.
    - **Token Management**: Methods to handle token retrieval, expiration checks, and refreshing tokens.
 
 2. **Request Preparation**:
@@ -21,7 +22,9 @@ An API integration in this library typically includes the following components:
     - **Configuration Parameters**: Contextual parameters necessary for setting up the integration. These parameters vary based on the API and the authentication method being used. Examples include:
     - **Microsoft MS Graph**:
        - `clientId`, `clientSecret`, `tenantID`, `bufferPeriod`
-    - **Jamf Pro**:
+    - **Jamf Pro (Direct)**:
        - `clientId`, `clientSecret`, `username`, `password`, `jamfBaseDomain`, `bufferPeriod`
+    - **Jamf Pro (Platform Gateway)**:
+       - `clientId`, `clientSecret`, `gatewayDomain`, `tenantID`, `bufferPeriod`
 
 4. **Shared Utilities**: Common utility functions that are common practise across multiple API integrations.
