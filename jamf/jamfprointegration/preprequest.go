@@ -22,6 +22,16 @@ import (
 //   - Checks and refreshes the token if necessary using the Integration's checkRefreshToken method.
 //   - Adds an "Authorization" header with a Bearer token obtained from the Integration's auth.getTokenString method.
 func (j *Integration) prepRequest(req *http.Request) error {
+	if j.AuthMethodDescriptor == "platform" {
+		switch {
+		case j.TenantID != "" && j.EnvironmentID == "":
+			req.Header.Set("X-Tenant-Id", j.TenantID)
+		case j.TenantID == "" && j.EnvironmentID != "":
+			req.Header.Set("X-Environment-Id", j.EnvironmentID)
+		default:
+			return fmt.Errorf("platform authentication requires exactly one of tenant ID or environment ID")
+		}
+	}
 
 	j.Sugar.Debugw("LOG-CONTENT-TYPE", "METHOD", req.Method, "URL", req.URL.String())
 	if req.Method != "GET" && req.Method != "DELETE" {

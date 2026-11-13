@@ -1,6 +1,7 @@
 package jamfprointegration
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -40,14 +41,35 @@ func BuildWithBasicAuth(jamfProFQDN string, Sugar *zap.SugaredLogger, bufferPeri
 
 // BuildWithPlatformGatewayOAuth constructs a Jamf Integration using the platform gateway OAuth2 flow.
 // The gateway URL becomes the base FQDN, and all API paths are rewritten transparently.
-// The tenantID is the UUID identifying the target Jamf Pro tenant on the platform.
+// The tenantID is sent as the X-Tenant-Id request header.
 func BuildWithPlatformGatewayOAuth(gatewayURL string, Sugar *zap.SugaredLogger, bufferPeriod time.Duration, clientId string, clientSecret string, tenantID string, hideSensitiveData bool, client http.Client) (*Integration, error) {
+	return BuildWithPlatformGatewayOAuthWithScope(gatewayURL, Sugar, bufferPeriod, clientId, clientSecret, tenantID, "", hideSensitiveData, client)
+}
+
+// BuildWithPlatformGatewayOAuthWithScope constructs a Jamf Integration using either tenant or environment scope.
+// Exactly one of tenantID and environmentID must be set; the selected ID is sent in its corresponding request header.
+func BuildWithPlatformGatewayOAuthWithScope(
+	gatewayURL string,
+	Sugar *zap.SugaredLogger,
+	bufferPeriod time.Duration,
+	clientId string,
+	clientSecret string,
+	tenantID string,
+	environmentID string,
+	hideSensitiveData bool,
+	client http.Client,
+) (*Integration, error) {
+	if (tenantID == "") == (environmentID == "") {
+		return nil, fmt.Errorf("exactly one of tenant ID or environment ID must be set for platform authentication")
+	}
+
 	integration := Integration{
 		JamfProFQDN:          gatewayURL,
 		Sugar:                Sugar,
 		AuthMethodDescriptor: "platform",
 		http:                 client,
 		TenantID:             tenantID,
+		EnvironmentID:        environmentID,
 	}
 
 	integration.BuildPlatformOAuth(clientId, clientSecret, bufferPeriod, hideSensitiveData, client, gatewayURL)
