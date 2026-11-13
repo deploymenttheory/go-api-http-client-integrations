@@ -1,7 +1,6 @@
 package jamfprointegration
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -16,6 +15,7 @@ type Integration struct {
 	auth                 authInterface
 	http                 http.Client
 	TenantID             string
+	EnvironmentID        string
 }
 
 // GetFQDN returns the base FQDN.
@@ -32,24 +32,16 @@ func (j *Integration) ConstructURL(endpoint string) string {
 }
 
 // rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths.
-// The scope type is always "tenant" for Jamf Classic/Pro APIs under the platform gateway.
 //
-//	/JSSResource/...  →  /api/proclassic/tenant/{tenantID}/...
-//	/api/v{x}/...     →  /api/pro/v{x}/tenant/{tenantID}/...
+//	/JSSResource/...  →  /api/proclassic/...
+//	/api/v{x}/...     →  /api/pro/v{x}/...
 func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
 	if strings.HasPrefix(endpoint, "/JSSResource") {
-		return fmt.Sprintf("/api/proclassic/tenant/%s%s", j.TenantID, endpoint[len("/JSSResource"):])
+		return "/api/proclassic" + endpoint[len("/JSSResource"):]
 	}
 
 	if strings.HasPrefix(endpoint, "/api/v") {
-		rest := endpoint[len("/api/"):]
-		slashIdx := strings.Index(rest, "/")
-		if slashIdx == -1 {
-			return fmt.Sprintf("/api/pro/%s/tenant/%s", rest, j.TenantID)
-		}
-		version := rest[:slashIdx]
-		remainder := rest[slashIdx:]
-		return fmt.Sprintf("/api/pro/%s/tenant/%s%s", version, j.TenantID, remainder)
+		return "/api/pro/" + endpoint[len("/api/"):]
 	}
 
 	return endpoint
