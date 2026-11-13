@@ -7,6 +7,7 @@ import (
 	"errors"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"path/filepath"
 	"strings"
 
@@ -29,16 +30,24 @@ import (
 //   - error: Any error encountered during the marshaling process.
 //
 // Functionality:
+//   - Returns no body for GET and HEAD requests, which must not carry one.
 //   - Determines the format (JSON or XML) based on the endpoint string.
 //   - Marshals the body as JSON if the endpoint contains "/api" or as XML if it contains "/JSSResource".
 //   - Logs the marshaled request body for POST, PUT, and PATCH methods using the integrated logger.
 //   - Logs an error if marshaling fails and returns the error.
 //   - Returns an error if the format is invalid.
-func (j *Integration) marshalRequest(body any, _ string, endpoint string) ([]byte, error) {
+func (j *Integration) marshalRequest(body any, method string, endpoint string) ([]byte, error) {
 	var (
 		data []byte
 		err  error
 	)
+
+	// GET and HEAD requests must not carry a body. Marshalling a nil body would
+	// produce the four bytes "null", which the platform gateway's CDN rejects
+	// with a 403 instead of forwarding the request.
+	if method == http.MethodGet || method == http.MethodHead {
+		return nil, nil
+	}
 
 	format := "json"
 	if strings.Contains(endpoint, "/JSSResource") || strings.Contains(endpoint, "/api/proclassic") {
