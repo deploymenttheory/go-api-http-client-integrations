@@ -33,15 +33,15 @@ func (j *Integration) ConstructURL(endpoint string) string {
 
 // rewriteEndpointForGateway translates direct Jamf Pro API paths to platform gateway paths.
 //
-//	/JSSResource/...  →  /api/proclassic/...
-//	/api/v{x}/...     →  /api/pro/v{x}/...
+//	/JSSResource/...  →  /proclassic/...
+//	/api/v{x}/...     →  /pro/v{x}/...
 func (j *Integration) rewriteEndpointForGateway(endpoint string) string {
 	if strings.HasPrefix(endpoint, "/JSSResource") {
-		return "/api/proclassic" + endpoint[len("/JSSResource"):]
+		return "/proclassic" + endpoint[len("/JSSResource"):]
 	}
 
 	if strings.HasPrefix(endpoint, "/api/v") {
-		return "/api/pro/" + endpoint[len("/api/"):]
+		return "/pro/" + endpoint[len("/api/"):]
 	}
 
 	return endpoint

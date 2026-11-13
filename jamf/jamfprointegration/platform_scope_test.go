@@ -29,9 +29,9 @@ func TestPlatformGatewayConstructURLUsesHeaderScope(t *testing.T) {
 		endpoint string
 		want     string
 	}{
-		{endpoint: "/JSSResource/computers", want: "https://gateway.example/api/proclassic/computers"},
-		{endpoint: "/api/v1/computers", want: "https://gateway.example/api/pro/v1/computers"},
-		{endpoint: "/api/v1", want: "https://gateway.example/api/pro/v1"},
+		{endpoint: "/JSSResource/computers", want: "https://gateway.example/proclassic/computers"},
+		{endpoint: "/api/v1/computers", want: "https://gateway.example/pro/v1/computers"},
+		{endpoint: "/api/v1", want: "https://gateway.example/pro/v1"},
 	}
 
 	for _, tt := range tests {
@@ -64,7 +64,7 @@ func TestPlatformGatewayPrepRequestAddsScopeHeader(t *testing.T) {
 				TenantID:             tt.tenantID,
 				EnvironmentID:        tt.environmentID,
 			}
-			req, err := http.NewRequest(http.MethodGet, "https://gateway.example/api/pro/v1/computers", nil)
+			req, err := http.NewRequest(http.MethodGet, "https://gateway.example/pro/v1/computers", nil)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -99,7 +99,7 @@ func TestPlatformGatewayPrepRequestRejectsAmbiguousScope(t *testing.T) {
 				TenantID:             tt.tenantID,
 				EnvironmentID:        tt.environmentID,
 			}
-			req, err := http.NewRequest(http.MethodGet, "https://gateway.example/api/pro/v1/computers", nil)
+			req, err := http.NewRequest(http.MethodGet, "https://gateway.example/pro/v1/computers", nil)
 			if err != nil {
 				t.Fatal(err)
 			}
